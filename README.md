@@ -42,7 +42,8 @@ niezwykle czasochłonne i niewygodne. Dziś nie odbiega to od pisania programów
 4. konsolidacja pliku wykonywalnego z relokacją (*ld65*)
 5. stowrzenie obrazu dyskietki (*c1561*)
 
-A wszystko etapy tworzenia programu są kontrolowane przez program *make*. Gdyby ja miał takie możliwości 1987!
+A wszystko etapy tworzenia programu są kontrolowane przez program *make*. Gdybym ja miał takie możliwości 
+w latach 1983-1987!
 
 UWAGA: To są dopiero fragmenty części asemblerowej. Kolejne moduły będę zamieszczał w miarę wolnego czasu.
 
