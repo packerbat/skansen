@@ -68,7 +68,7 @@ ale jeszcze jej nie ma.
 Aby przetestować sam WPBASIC można te wszystkie czynności skrócić do jednego polecenia:
 
 ```
->x64 -autostart wpbasic.prg
+x64 -autostart wpbasic.prg
 ```
 
 
