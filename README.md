@@ -28,7 +28,7 @@ Impulsem do odtworzenia mojego oprogramowania były 4 strony:
 
 1. niezwykle rozbudowana i szczegółowa strona o [firmwarze C64](http://unusedino.de/ec64/technical/aay/c64/),
 2. niezwykły emulator [VICE](http://vice-emu.sourceforge.net/),
-3. fantastyczny kroskompilator [cc65](https://www.cc65.org/),
+3. fantastyczny kros-kompilator [cc65](https://www.cc65.org/),
 4. rozszerzenie BASIC-a o nazwie [Cypherbasic](https://github.com/silizium/cypherbasic) pana Hanno Behrens z Niemiec.
 
 Pisząc przewodnik po skansenie w Ciechanowcu w 1987 bazowałem na swoich wcześniejszych programach i na podręczniku
@@ -41,7 +41,7 @@ niezwykle czasochłonne i niewygodne. Dziś nie odbiega to od pisania programów
 4. konsolidacja pliku wykonywalnego z relokacją (`ld65`),
 5. stworzenie obrazu dyskietki (`c1561`).
 
-A wszystko etapy tworzenia programu są kontrolowane przez program *make*. Gdybym ja miał takie możliwości 
+A wszystko etapy tworzenia programu są kontrolowane przez program `make`. Gdybym ja miał takie możliwości 
 w latach 1983-1987!
 
 ## Kompilacja
@@ -67,10 +67,7 @@ ale jeszcze jej nie ma.
 
 Aby przetestować sam WPBASIC można te wszystkie czynności skrócić do jednego polecenia:
 
-```
-x64 -autostart wpbasic.prg
-```
-
+    x64 -autostart wpbasic.prg
 
 UWAGA: To są dopiero fragmenty części asemblerowej. Kolejne moduły będę zamieszczał w miarę wolnego czasu.
 
