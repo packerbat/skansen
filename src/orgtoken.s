@@ -3,7 +3,6 @@
 ; zmienia: wszystko
 
 .export TOKEN
-.export TOKTB
 
 .segment "CODE"
 .proc TOKEN
@@ -11,7 +10,7 @@
     ldy #$04        ;Y jest skaźnikiem DEST, przed postawieniem będzie INY więc żeby było $200 to musi być $200-5 czyli $01FB
     sty $0F         ;Flag: DATA scan/List Quote/Garbage collection
 
-L1: lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+L1: lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     bpl LA58E       ;to jest litera więc przeskakuję do analizy liter
     cmp #$ff        ;litera $ff jest traktowana jak token $ff
     beq NXLET       ;litery od $80 do $FE są milcząco ignorowane
@@ -50,9 +49,9 @@ COMP:
     inx
 
 COMP1:
-    lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+    lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     sec
-    sbc $A09E,Y     ;BASIC Command Keyword Table
+    sbc $A09E,y     ;BASIC Command Keyword Table
     beq COMP
     cmp #$80
     bne NXTOK
@@ -64,8 +63,8 @@ ROZPOZ1:
 NXLET:              ;rozpoznałem token i mam go w A, trzeba go zapamiętać i dalej kompilować, jeśli A=0 to skończyła się linijka
     inx
     iny
-    sta $01FB,Y
-    lda $01FB,Y
+    sta $01FB,y
+    lda $01FB,y
     beq KONIEC
     sec
     sbc #$3A
@@ -83,13 +82,13 @@ LA5DE:
     sta $08         ;Flag: Scan for Quote at end of String
 
 REMARK:
-    lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+    lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     beq NXLET
     cmp $08         ;Flag: Scan for Quote at end of String, w $08 może być " albo inny znak końca cytowania
     beq NXLET
 CYTUJ:
     iny             ;ropozczynam cytowanie od litery, którą mam w A czyli "
-    sta $01FB,Y
+    sta $01FB,y
     inx
     bne REMARK
 
@@ -99,45 +98,17 @@ NXTOK:
 
 LA5F9:
     iny
-    lda $A09D,Y     ;BASIC Operator Vectors
+    lda $A09D,y     ;BASIC Operator Vectors
     bpl LA5F9
-    lda $A09E,Y     ;BASIC Command Keyword Table
+    lda $A09E,y     ;BASIC Command Keyword Table
     bne COMP1
-    lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+    lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     bpl ROZPOZ1
 
 KONIEC:
-    sta $01FD,Y     ;0 na końcu skompilowanego kodu oraz zresetowanie wskaźnika wejścia na $01ff
+    sta $01FD,y     ;0 na końcu skompilowanego kodu oraz zresetowanie wskaźnika wejścia na $01ff
     dec $7B         ;Pointer: Current Byte of BASIC Text + 1
     lda #$ff
     sta $7A         ;Pointer: Current Byte of BASIC Text
     rts
 .endproc
-
-.segment "RODATA"
-TOKTB: .byte "uP"
-       .byte "pausE"
-       .byte "colouR"
-       .byte "hgR"
-       .byte "clS"
-       .byte "inK"
-       .byte "nrM"
-       .byte "ploT"
-       .byte "linE"
-       .byte "draW"
-       .byte "shifT"
-       .byte "movE"
-       .byte "musiC"
-       .byte "voicE"
-       .byte "volumE"
-       .byte "cli"
-       .byte "shapE"
-       .byte "patH"
-       .byte "seI"
-       .byte "basiC"
-       .byte "texT"
-       .byte "spritE"
-       .byte "scrolL"
-       .byte "plaY"
-       .byte $00
-

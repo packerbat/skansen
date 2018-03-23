@@ -14,9 +14,9 @@
     bcc :+
     asl
     tay
-    lda FNVEC+1,Y
+    lda FNVEC+1,y
     pha
-    lda FNVEC,Y
+    lda FNVEC,y
     pha
     jmp $0073       ;CHRGET: Get next Byte of BASIC Text
 :   jsr $0079       ;CHRGOT: Get same Byte again

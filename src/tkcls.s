@@ -5,8 +5,10 @@
 ; zmienia: wszystko
 
 .export TkCLS
-.import XC: zeropage
-.import YC: zeropage
+
+.segment "UPTRS": zeropage
+YC:   .res 2
+XC:   .res 2
 
 .segment "CODE"
 .proc TkCLS
@@ -21,7 +23,7 @@
     sei             ;blokada przerwań z zachowaniem poprzedniego stanu blokady
     lda #$34        ;odłączenie BASIC i KERNAL, gdy się wyłączy oba to zniknie również I/O a ekran tekstowy pokrywa się z I/O
     sta $01
-    lda hicolor     ;kolor
+    lda HICOLOR     ;kolor
     ldx #$04
     ldy #$e7        ;rozmiar $03e8 = 1000
     jsr PST
@@ -39,10 +41,10 @@
 .endproc
 
 .proc PST
-:   sta (XC),Y
+:   sta (XC),y
     dey
     bne :-
-    sta (XC),Y
+    sta (XC),y
     dec XC+1
     dex
     bne :-

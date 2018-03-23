@@ -25,15 +25,15 @@
          sbc #$4D
          asl
          tay
-         lda TOKVEC+1,Y
+         lda TOKVEC+1,y
          pha
-         lda TOKVEC,Y
+         lda TOKVEC,y
          pha
          jmp $0073   ;CHRGET: Get next Byte of BASIC Text
 LA804:   jmp $A804   ;Perform [let], bo znak był poniżej $80
 LA7F7:   jmp $A7F7   ;Perform BASIC Keyword, bo znak był poniżej $80+$23
 LA80E:   jmp $A80E   ;Perform GOTO or SYNTAC ERROR, bo znak był poniżej $80+$4D, moje zaczynają się od $80+$4D, chyba $80+$4C jest niewykorzystany
-KONIEC:  rts         ;skok do wykonania mojego tokena, A jest następnym znakiem programu
+KONIEC:  rts         ;skok do wykonania mojego tokena, akumulator ma następny znak programu
 .endproc
 
 .segment "RODATA"

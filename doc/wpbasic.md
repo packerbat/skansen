@@ -41,7 +41,7 @@ Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to
 
 ### NRM
 
-Komenda NRM służy do przełączania układu VIC-II w tryb tekstowy (40 &times; 24).
+Komenda NRM służy do przełączania układu VIC-II w tryb tekstowy (40 &times; 25).
 Składnia:
 
     NRM [<kolor litery> [, <kolor tła> [, <kolor ramki>]]]
@@ -66,7 +66,7 @@ można podać czas, po którym PAUSE się za zakończy nawet jeśli użytkownik 
 
 Czas podawany jest jednostkach 1/60 sekundy bo mniej więcej 60 razy na sekundę jest zwiększany
 licznik czasu rzeczywistego (*jiffy clock*). Za aktualizowanie tego czasu jest odpowiedzialna procedura
-przerwań IRQ generowanych przez jeden z liczników CIA #1. Ten zegar nie jest zbyt dokładny, w dodatku
+przerwań IRQ generowanych przez Timer A układu CIA #1. Ten zegar nie jest zbyt dokładny, w dodatku
 zegar nie jest zwiększany gdy przerwania są zamaskowane. Procedura jest mocno  uproszczona i np. nie 
 przewiduje zawinięcia się zegara przy zmianie doby.
 

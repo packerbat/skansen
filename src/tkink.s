@@ -4,7 +4,7 @@
 ; korzysta z $02 w zeropage
 
 .export TkINK
-.export hicolor
+.export HICOLOR
 
 .segment "CODE"
 .proc TkINK
@@ -16,14 +16,14 @@
     asl
     asl
     sta $02         ;unused zeropage byte
-    ldx hicolor
+    ldx HICOLOR
     jsr $0079       ;CHRGOT: Get same Byte again
     beq :+
     jsr $e200       ;Get Next One Byte Parameter
 :   txa
     and #$0f
     ora $02
-    sta hicolor
+    sta HICOLOR
 
     jsr $E206    ;Basic Check Default Parameters, przerywa CRFG jeśli nie ma parametru
     jsr $E200    ;Basic Get Next One Byte Parameter
@@ -32,4 +32,4 @@
 .endproc
 
 .segment "BSS"
-hicolor:    .res 1
+HICOLOR:    .res 1

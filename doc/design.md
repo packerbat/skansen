@@ -21,7 +21,7 @@ co KERNAL czyli $E000-$FFFF. Utrudnia to odczytanie pamięci graficznej, ale w z
 nie miał czytać pamięci ekranu. Na marginesie, idąc tym tropem można by pokusić się o technikę
 *double buffer* - czyli gdy pierwsza ramka animacji jest widoczna, to druga ramka animacji, w tym samym
 czasie, jest renderowana. Jako drugi bufor można by wykorzystać pamięć "pod" BASIC-iem czyli w
-zakresie $A000-$BFFFF. W takim wypadku wystarczy przełączyć tylko bank pamięci układu VIC-II w CIA #1.
+zakresie $A000-$BFFFF. W takim wypadku wystarczy przełączyć tylko bank pamięci układu VIC-II w CIA #2.
 Najlepszymi momentami na przełączenia banku byłoby przerwanie generowane podczas powrotu plamki na
 górę ekranu.
 

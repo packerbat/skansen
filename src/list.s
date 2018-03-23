@@ -24,12 +24,12 @@
 :   dex
     beq :++
 :   iny
-    lda TOKTB,Y
+    lda TOKTB,y
     bpl :-
     bmi :--
 
 :   iny             ;znalazłem więc go drukuję
-    lda TOKTB,Y
+    lda TOKTB,y
     bmi :+
     jsr $ab47       ;Output Format Character ale końcówka
     bne :-

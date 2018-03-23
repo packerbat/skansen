@@ -7,7 +7,7 @@ XC:   .res 2
 
 .segment "CODE"
     .word $080D       ;wskaźnik to następnej linii
-    .word 2018        ;numer linii i jednocześnie rok powstania
+    .word 1987        ;numer linii i jednocześnie rok powstania
     .byte $9E         ;SYS token
     .asciiz "(2063)"  ;SYS argument
     .word $0000       ;wskaźnik na następną linię, $0000 oznacza, że jest to ostania linia
@@ -20,8 +20,8 @@ XC:   .res 2
     sta YC
     stx YC+1
     tay
-:   lda (XC),Y
-    sta (YC),Y
+:   lda (XC),y
+    sta (YC),y
     dey
     bne :-
     inc XC+1

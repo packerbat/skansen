@@ -11,7 +11,7 @@
     ldy #$04        ;Y jest skaźnikiem DEST, przed postawieniem będzie INY więc żeby było $200 to musi być $200-5 czyli $01FB
     sty $0F         ;Flag: DATA scan/List Quote/Garbage collection
 
-L1: lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+L1: lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     bpl :+          ;to jest litera więc przeskakuję do analizy liter
     cmp #$ff        ;litera $ff jest traktowana jak token $ff
     beq NXLET       ;litery od $80 do $FE są milcząco ignorowane
@@ -47,9 +47,9 @@ COMP:
     inx
 
 COMP1:
-    lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+    lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     sec
-    sbc $A09E,Y     ;BASIC Command Keyword Table
+    sbc $A09E,y     ;BASIC Command Keyword Table
     beq COMP
     cmp #$80
     bne NXTOK
@@ -62,8 +62,8 @@ ROZPOZ1:
 NXLET:              ;rozpoznałem token i mam go w A, trzeba go zapamiętać i dalej kompilować, jeśli A=0 to skończyła się linijka
     inx
     iny
-    sta $01FB,Y
-    lda $01FB,Y
+    sta $01FB,y
+    lda $01FB,y
     beq KONIEC
     sec
     sbc #$3A
@@ -77,13 +77,13 @@ NXLET:              ;rozpoznałem token i mam go w A, trzeba go zapamiętać i d
     sta $08         ;Flag: Scan for Quote at end of String
 
 REMARK:
-    lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+    lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     beq NXLET
     cmp $08         ;Flag: Scan for Quote at end of String, w $08 może być " albo inny znak końca cytowania
     beq NXLET
 CYTUJ:
     iny             ;ropozczynam cytowanie od litery, którą mam w A czyli "
-    sta $01FB,Y
+    sta $01FB,y
     inx
     bne REMARK
 
@@ -91,9 +91,9 @@ NXTOK:
     ldx $7A         ;Pointer: Current Byte of BASIC Text
     inc $0B         ;Input Buffer Pointer/Number of Subscripts
 :   iny
-    lda $A09D,Y     ;BASIC Command Keyword Table - 1
+    lda $A09D,y     ;BASIC Command Keyword Table - 1
     bpl :-
-    lda $A09E,Y     ;BASIC Command Keyword Table
+    lda $A09E,y     ;BASIC Command Keyword Table
     bne COMP1
 
     inc $0B         ;Input Buffer Pointer
@@ -102,9 +102,9 @@ NTOK:
     inx
 E8: iny
 NTOK1:
-    lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+    lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     sec
-    sbc TOKTB,Y
+    sbc TOKTB,y
     beq NTOK
     cmp #$80
     beq ROZPOZ
@@ -112,15 +112,15 @@ NTOK1:
     ldx $7A         ;Pointer: Current Byte of BASIC Text
     inc $0B         ;Input Buffer Pointer
 :   iny
-    lda TOKTB-1,Y
+    lda TOKTB-1,y
     bpl :-
-    lda TOKTB,Y
+    lda TOKTB,y
     bne NTOK1
-    lda $0200,X     ;BASIC Input Buffer (Input Line from Screen)
+    lda $0200,x     ;BASIC Input Buffer (Input Line from Screen)
     bpl ROZPOZ1
 
 KONIEC:
-    sta $01FD,Y     ;0 na końcu skompilowanego kodu oraz zresetowanie wskaźnika wejścia na $01ff
+    sta $01FD,y     ;0 na końcu skompilowanego kodu oraz zresetowanie wskaźnika wejścia na $01ff
     dec $7B         ;Pointer: Current Byte of BASIC Text + 1
     lda #$ff
     sta $7A         ;Pointer: Current Byte of BASIC Text
@@ -128,29 +128,29 @@ KONIEC:
 .endproc
 
 .segment "RODATA"
-TOKTB: .byte "uP"       ;token $CD
-       .byte "pausE"    ;token $CE
-       .byte "colouR"   ;token $CF
-       .byte "hgR"      ;token $D0
-       .byte "clS"      ;token $D1
-       .byte "inK"      ;token $D2
-       .byte "nrM"      ;token $D3
-       .byte "ploT"     ;token $D4
-       .byte "linE"     ;token $D5
-       .byte "draW"     ;token $D6
-       .byte "shifT"    ;token $D7
-       .byte "movE"     ;token $D8
-       .byte "musiC"    ;token $D9
-       .byte "voicE"    ;token $DA
-       .byte "volumE"   ;token $DB
-       .byte "cli"      ;token $DC
-       .byte "shapE"    ;token $DD
-       .byte "patH"     ;token $DE
-       .byte "seI"      ;token $DF
-       .byte "basiC"    ;token $E0
-       .byte "texT"     ;token $E1
-       .byte "spritE"   ;token $E2
-       .byte "scrolL"   ;token $E3
-       .byte "plaY"     ;token $E4
+TOKTB: .byte "u",'p'+$80       ;token $CD
+       .byte "paus",'e'+$80    ;token $CE
+       .byte "colou",'r'+$80   ;token $CF
+       .byte "hg",'r'+$80      ;token $D0
+       .byte "cl",'s'+$80      ;token $D1
+       .byte "in",'k'+$80      ;token $D2
+       .byte "nr",'m'+$80      ;token $D3
+       .byte "plo",'t'+$80     ;token $D4
+       .byte "lin",'e'+$80     ;token $D5
+       .byte "dra",'w'+$80     ;token $D6
+       .byte "shif",'t'+$80    ;token $D7
+       .byte "mov",'e'+$80     ;token $D8
+       .byte "musi",'c'+$80    ;token $D9
+       .byte "voic",'e'+$80    ;token $DA
+       .byte "volum",'e'+$80   ;token $DB
+       .byte "cl",'i'+$80      ;token $DC
+       .byte "shap",'e'+$80    ;token $DD
+       .byte "pat",'h'+$80     ;token $DE
+       .byte "se",'i'+$80      ;token $DF
+       .byte "basi",'c'+$80    ;token $E0
+       .byte "tex",'t'+$80     ;token $E1
+       .byte "sprit",'e'+$80   ;token $E2
+       .byte "scrol",'l'+$80   ;token $E3
+       .byte "pla",'y'+$80     ;token $E4
        .byte $00
 

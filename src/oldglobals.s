@@ -1,13 +1,13 @@
-;DX        = $27
-;DY        = $29
-;KX        = $6A
-;KY        = $6C
-;CO        = $22
-;PM        = $24
-;AD        = $62
-;AP        = $64
-;YC        = $FB
-;XC        = $FD
+;CO        = $22     ;Utility Pointer Area, First Pointer
+;PM        = $24     ;Utility Pointer Area, Second Pointer
+;DX        = $27     ;Floating-Point Product of Multiply
+;DY        = $29     ;Floating-Point Product of Multiply
+;AD        = $62     ;Floating Accum #1 Mantissa
+;AP        = $64     ;Floating Accum #1 Mantissa
+;KX        = $6A     ;Floating Accum #2 Mantissa
+;KY        = $6C     ;Floating Accum #2 Mantissa
+;YC        = $FB     ;Free space for user programs
+;XC        = $FD     ;Free space for user programs
 
 ;ROT       = $02A7
 ;HICOL     = $02A8
