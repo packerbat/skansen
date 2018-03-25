@@ -4,6 +4,7 @@
 ; zmienia: wszystko
 
 .export TkPAUSE
+.import WAIT
 
 .segment "CODE"
 .proc TkPAUSE

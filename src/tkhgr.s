@@ -3,6 +3,7 @@
 ; zmienia: wszystko
 
 .export TkHGR
+.import TkINK, HGR
 
 .segment "CODE"
 .proc TkHGR

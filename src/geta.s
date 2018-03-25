@@ -1,0 +1,20 @@
+;------------------------------------
+; Pobiera opcjonalny parametr PTYP
+; input:
+;
+; output:
+;    PTYP - zmieniony jeśli wystąpił
+
+.export GETA
+.export PTYP
+
+.segment "CODE"
+.proc GETA
+    jsr $E206   ;Get Next One Byte Parameter
+    jsr $E200   ;Check Default Parameters
+    stx PTYP
+    rts
+.endproc
+
+.segment "BSS"
+PTYP:    .res 1

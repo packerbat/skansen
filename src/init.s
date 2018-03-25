@@ -1,7 +1,8 @@
 ;---------------------------------------------------------- 
 ; sekwencja inicjująca rozszerzenie basica
 
-.export ODS
+.export SX, ODS
+.import TEV, DOIT, LIST, TOKEN, NOR, NSTOP
 
 .segment "CODE"
     ldx #$00

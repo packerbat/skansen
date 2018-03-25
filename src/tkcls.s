@@ -1,10 +1,13 @@
 ;------------------------------------
 ; procedura TkCLS - ustawia 3 kolory, górny nibble, dolny nibble i boarder, parametry drugi i trzeci opcjonalne,
-;   po ustawieniu kolorów czyści oba ekrany: graficzny i tekstowy
-;   nie wiem po co czyszczę tryb tekstowy
+;   po ustawieniu kolorów czyści ekrany graficzny i tablicę kolorów ekranu graficznego, który pokrywa się
+;   z adresem ekranu tekstowego
+; XC i YC to są ostatnie współrzędne po rysowaniu jakiegoś elementu
+;   po czyszczeniu ekranu XC=0 i YC=0 czyli lewy górny narożnik
 ; zmienia: wszystko
 
-.export TkCLS
+.export TkCLS, XC, YC
+.import TkINK, HICOLOR
 
 .segment "UPTRS": zeropage
 YC:   .res 2

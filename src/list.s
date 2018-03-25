@@ -3,6 +3,7 @@
 ; zmienia: wszystko
 
 .export LIST
+.import TOKTB
 
 .segment "CODE"
 .proc LIST

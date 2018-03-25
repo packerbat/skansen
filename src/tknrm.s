@@ -4,6 +4,7 @@
 ; zmienia: A
 
 .export TkNRM
+.import TkCOLOUR, NRM
 
 .segment "CODE"
 .proc TkNRM

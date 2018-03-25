@@ -7,6 +7,7 @@
 ; stos: 2+
 
 .export NOR
+.import NRM
 
 .segment "CODE"
 .proc NOR

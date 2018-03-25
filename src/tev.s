@@ -3,6 +3,7 @@
 ; zmienia: wszystko
 
 .export TEV
+.import FnSCROLL
 
 .segment "CODE"
 .proc TEV

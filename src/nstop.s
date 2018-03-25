@@ -4,6 +4,7 @@
 ; stos: 3+
 
 .export NSTOP
+.import NRM
 
 .segment "CODE"
 .proc NSTOP
