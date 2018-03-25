@@ -2,7 +2,7 @@
 ; sekwencja inicjująca rozszerzenie basica
 
 .export SX, ODS
-.import TEV, DOIT, LIST, TOKEN, NOR, NSTOP
+.import TEV, DOIT, LIST, TOKEN, NOR, NSTOP, TkNEW
 
 .segment "CODE"
     ldx #$00
@@ -45,6 +45,7 @@
     ;sty $0315
     ;cli
 
+    jsr TkNEW
     rts           ;return from SYS(2063)
 
 .segment "RODATA"

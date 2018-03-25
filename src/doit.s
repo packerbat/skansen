@@ -1,7 +1,7 @@
 ;------------------------------------
 ; procedura DOIT -
 ; zmienia: wszystko
-; nie prawdzam górnego zakresu tokena, to żle
+; nie sprawdzam górnego zakresu tokena, to żle
 
 .export DOIT
 .export TOKVEC
