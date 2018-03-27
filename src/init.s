@@ -45,8 +45,7 @@
     ;sty $0315
     ;cli
 
-    jsr TkNEW
-    rts           ;return from SYS(2063)
+    rts           ;return from SYS(2069)
 
 .segment "RODATA"
 NVC: .word  NOR,  $A483, TOKEN, LIST,  DOIT,   TEV

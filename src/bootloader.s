@@ -9,7 +9,11 @@ XC:   .res 2
     .word $080D       ;wskaźnik to następnej linii
     .word 1987        ;numer linii i jednocześnie rok powstania
     .byte $9E         ;SYS token
-    .asciiz "(2063)"  ;SYS argument
+    .asciiz "(2069)"  ;SYS argument
+    .word $0813       ;wskaźnik to następnej linii
+    .word 2018        ;numer linii i jednocześnie rok powstania
+    .byte $A2         ;NEW token
+    .byte $00         ;end of basic line
     .word $0000       ;wskaźnik na następną linię, $0000 oznacza, że jest to ostania linia
 
     lda #$00
@@ -29,8 +33,8 @@ XC:   .res 2
     lda YC+1
     cmp #$A0      ;kopiuje 4KB, od $9000 do $9FFF włącznie
     bne :-
-    jmp $9000     ;will init wpbasic and return to SYS(2063)
-    .res 1998,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
+    jmp $9000     ;will init wpbasic and return to SYS(2069)
+    .res 1992,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
 
 .segment "BINARY"
     .incbin "wpbasic.bin"

@@ -6,6 +6,7 @@
 
 .segment "CODE"
 .proc LIST
+LA71A:
     BPL LA6F3     ; Perform [list]
     CMP #$FF
     BEQ LA6F3     ; Perform [list]
@@ -53,6 +54,8 @@ LA6C9:
     BNE LA6E6
     CPX $14       ; Temporary: Integer value
     BEQ LA6E8
+
+LA6E6:
     BCS LA714
 
 LA6E8:
@@ -74,9 +77,9 @@ LA6F3:
 
 LA700:
     INY
-    BEQ $A714
+    BEQ LA714
     LDA ($5F),Y   ; Temporary storage for FLPT value
-    BNE LA717     ; Handle LIST Character
+    BEQ LA71A     ; Handle LIST Character
     TAY
     LDA ($5F),Y   ; Temporary storage for FLPT value
     TAX
@@ -84,11 +87,8 @@ LA700:
     LDA ($5F),Y   ; Temporary storage for FLPT value
     STX $5F       ; Temporary storage for FLPT value
     STA $60       ; Temporary storage for FLPT value
-    BNE $A6C9
+    BNE LA6C9
 
 LA714:
     JMP $E386     ; BASIC Warm Start [RUNSTOP-RESTORE]
-
-LA717:
-    JMP ($0306)   ; Vector: BASIC LIST Routine
 .endproc

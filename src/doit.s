@@ -17,13 +17,15 @@
 
 .proc DOIT1
     beq KONIEC
-    sbc #$80       ;skąd wiem, że C=1?
-    bcc :+
-    cmp #$23
-    bcc :++
-    cmp #$4D
-    bcc :+++
-    sbc #$4D
+    php
+    cmp #$cd
+    bcc :+          ;$01..$CC - nie moje
+    cmp #$e5
+    bcs :+          ;$e5..$ff - nie moje
+
+    plp
+    sec
+    sbc #$cd
     asl
     tay
     lda TOKVEC+1,y
@@ -31,9 +33,10 @@
     lda TOKVEC,y
     pha
     jmp $0073   ;CHRGET: Get next Byte of BASIC Text
-:   jmp $A804   ;Perform [let], bo znak był poniżej $80
-:   jmp $A7F7   ;Perform BASIC Keyword, bo znak był poniżej $80+$23
-:   jmp $A80E   ;Perform GOTO or SYNTAC ERROR, bo znak był poniżej $80+$4D, moje zaczynają się od $80+$4D, chyba $80+$4C jest niewykorzystany
+
+:   plp
+    jmp $A7EF   ;Perform BASIC Keyword
+
 KONIEC:
     rts         ;skok do wykonania mojego tokena, akumulator ma następny znak programu
 .endproc
