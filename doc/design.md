@@ -12,9 +12,11 @@ WPBASIC ma za zadanie:
 
 1. przełączać komputer w tryb wysokiej rozdzielczości i z powrotem do trybu tekstowego,
 
-2. umożliwić tworzenie i poruszanie spritami,
+2. umożliwić proste operacje graficzne na ekranie wysokiej rozdzielczości,
 
-3. pozwolić na odtwarzanie muzyki w tle.
+3. umożliwić tworzenie i poruszanie spritami,
+
+4. pozwolić na odtwarzanie muzyki w tle.
 
 Aby nie tracić cennej pamięci RAM zdecydowałem się umieścić tryb graficzny pod tym samym adresem
 co KERNAL czyli $E000-$FFFF. Utrudnia to odczytanie pamięci graficznej, ale w założeniach przewodnik
@@ -23,18 +25,21 @@ nie miał czytać pamięci ekranu. Na marginesie, idąc tym tropem można by pok
 czasie, jest renderowana. Jako drugi bufor można by wykorzystać pamięć "pod" BASIC-iem czyli w
 zakresie $A000-$BFFFF. W takim wypadku wystarczy przełączyć tylko bank pamięci układu VIC-II w CIA #2.
 Najlepszymi momentami na przełączenia banku byłoby przerwanie generowane podczas powrotu plamki na
-górę ekranu.
+górę ekranu. Chwilowo technika *double buffer* nie jest możliwa bo pamięć pod ROM-em BASIC-a $A000-$AFFF
+jest zajęta na wzorce czcionek.
 
 Aby maksymalnie uprościć ładowanie i uruchamianie programu `wpbasic.prg`, zdecydowałem się na 
 wariant ładowania programu `wpbasic.prg` do obszaru przeznaczonego na programy BASIC-a czyli
 poczynając od adresu $0801. Ponieważ taki program trudno byłoby uruchomić więc na samym początku
-programu  `wpbasic.prg` jest zasymulowany jednolinijkowy program w BASIC-u z komendą:
+programu  `wpbasic.prg` jest zasymulowany dwulinijkowy program w BASIC-u z komendą:
 
-    SYS(2063)
+    SYS(2069)
+    NEW
 
 Dzięki temu rozszerzenie WPBASIC można uruchomić standardową komendą:
 
     RUN
 
-Pod adresem 2063 ($080F) znajduje się maleńki programik, który kopiuje kod maszynowy programu
-`wpbasic.prg` pod właściwy adres $9000 i wykonuje skok do procedury `init`, która inicjuje program.
+Pod adresem 2069 ($080F) znajduje się maleńki programik, który kopiuje kod maszynowy programu
+`wpbasic.prg` pod właściwy adres $9000 i wykonuje skok do procedury `init`, która po przekopiowaniu
+znajduje się pod adresem $9000.

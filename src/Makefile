@@ -4,6 +4,7 @@ OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o tknew.o tkin
 all: $(TARGETS)
 
 skansen.d64: wpbasic.prg
+	rm -f skansen.d65
 	c1541 -format diskname,id d64 skansen.d64 -attach skansen.d64 -write wpbasic.prg wpbasic
 
 wpbasic.prg: bootloader.o wpbasic.bin
@@ -13,10 +14,11 @@ wpbasic.bin: init.o wpbasic.lib
 	ld65 -v -Ln wpbasic.lbl -C skansen.cfg -o $@ init.o wpbasic.lib c64.lib
 
 wpbasic.lib: $(OBJS)
+	rm -f wpbasic.lib
 	ar65 r wpbasic.lib $(OBJS)
 
 %.o: %.s
 	ca65 -t c64 -v -g -o $@ $<
 
 clean:
-	rm *.o *.lib *.prg *.lbl *.d64 *.bin
+	rm -f *.o *.lib *.prg *.lbl *.d64 *.bin

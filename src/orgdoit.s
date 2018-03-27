@@ -7,45 +7,45 @@
 
 .segment "CODE"
 .proc DOIT
-    JSR $0073     ; CHRGET: Get next Byte of BASIC Text
-    JSR DOIT1     ; Perform BASIC Keyword
-    JMP $A7AE     ; BASIC Warm Start
+    jsr $0073   ;CHRGET: Get next Byte of BASIC Text
+    jsr DOIT1
+    jmp $A7AE   ;BASIC Warm Start
 .endproc
 
 .proc DOIT1
-    BEQ LA82B     ; Perform [restore]
+    beq LA82B     ; Perform [restore]
 
 LA7EF:
-    SBC #$80
-    BCC LA804
-    CMP #$23
-    BCS LA80E
-    ASL
-    TAY
-    LDA $A00D,Y   ; BASIC Command Vectors - 1
-    PHA
-    LDA $A00C,Y   ; BASIC Command Vectors - 1
-    PHA
-    JMP $0073     ; CHRGET: Get next Byte of BASIC Text
+    sbc #$80
+    bcc LA804
+    cmp #$23
+    bcs LA80E
+    asl
+    tay
+    lda $A00D,y
+    pha
+    lda $A00C,y
+    pha
+    jmp $0073   ;CHRGET: Get next Byte of BASIC Text
 
 LA804:
-    JMP $A9A5     ; Perform [let]
+    jmp $A9A5     ; Perform [let]
 
 LA807:
-    CMP #$3A     ; ':'
-    BEQ DOIT     ; Prepare to execute statement
+    cmp #$3A     ; ':'
+    beq DOIT     ; Prepare to execute statement
 
 LA80B:
-    JMP $AF08     ; Output ?SYNTAX Error
+    jmp $AF08     ; Output ?SYNTAX Error
 
 LA80E:
-    CMP #$4B      ;TOKEN GO=$CB
-    BNE LA80B
-    JSR $0073     ; CHRGET: Get next Byte of BASIC Text
-    LDA #$A4      ;TOKEN TO=$A4
-    JSR $AEFF     ; Test ','
-    JMP $A8A0     ; Perform [goto]
+    cmp #$4B      ;TOKEN GO=$CB
+    bne LA80B
+    jsr $0073     ; CHRGET: Get next Byte of BASIC Text
+    lda #$A4      ;TOKEN TO=$A4
+    jsr $AEFF     ; Test ','
+    jmp $A8A0     ; Perform [goto]
 
 LA82B:
-    RTS
+    rts
 .endproc

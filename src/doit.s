@@ -11,8 +11,7 @@
 .proc DOIT
     jsr $0073   ;CHRGET: Get next Byte of BASIC Text
     jsr DOIT1
-    jsr $A7AE   ;BASIC Warm Start
-    rts
+    jmp $A7AE   ;BASIC Warm Start
 .endproc
 
 .proc DOIT1
