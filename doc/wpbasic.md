@@ -87,11 +87,11 @@ Kolory w tym przykładzie to 1 = biały, 0 = czarny, 6 = niebieski, 3 = seledyno
 
 Komenda PLOT służy do zmiany stanu piksela w trybie wysokiej rozdzielczości. Składnia:
 
-    PLOT x, y [, <sposób-zmiany>]
+    PLOT x, y [, drawmode]
 
 Współrzędna *x* to numer kolumny w zakresie 0 do 319 licząc od lewej do prawej, a współrzędna *y* to
 numer wiersza w zakresie 0 do 199 licząc od góry do dołu. Obie wartości mogą być rzeczywiste. Opcjonalny
-parametr *sposób-zmiany* może mieć jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela
+parametr *drawmode* może mieć jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela
 będzie 1, 2 - wartość piksela zostanie zanegowana.
 
 **Przykład 2, wykres punktowy**
@@ -115,20 +115,20 @@ Wykres będzie się składał z białych pikseli na czarnym tle a ramka będzie 
 
 Komenda LINE służy do rysowania odcinków o podanych współrzędnych początku i końca odcinka. Składnia:
 
-    LINE TO x2, y2 [, <sposób-zmiany>]
+    LINE TO x2, y2 [, drawmode]
     
 albo
 
-    LINE x1, y1, x2, y2 [, <sposób-zmiany>]
+    LINE x1, y1, x2, y2 [, drawmode]
 
 Współrzędne *x1* i *x2* to numery kolumn w zakresie 0 do 319 licząc od lewej do prawej, a współrzędne *y1* i *y2* to
 numery wierszy w zakresie 0 do 199 licząc od góry do dołu. Każda z czterech wartości może być rzeczywista. Opcjonalny
-parametr *sposób-zmiany* może mieć jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela
+parametr *drawmode* może mieć jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela
 będzie 1, 2 - wartość piksela zostanie zanegowana.
 
 **Przykład 3, wykres odcinkowy**
 
-Poniższy program przełączy się w tryb graficzny, wyczyści ekran, i narysuje wykres funkcji sin(x)/x rozciągnięty
+Poniższy program przełączy się w tryb graficzny, wyczyści ekran i narysuje wykres funkcji sin(x)/x rozciągnięty
 na cały obszar ekranu. Po narysowaniu wykresu program będzie czekał na wciśnięcie dowolnego klawisza a gdy to
 nastąpi, wróci do trybu tekstowego.
 
@@ -150,4 +150,63 @@ nastąpi, wróci do trybu tekstowego.
 Wykres będzie się składał z żółtych pikseli na czarnym tle a ramka będzie miała niezmieniony kolor. Kolor
 osi będzie biały jednak ze względu na niedoskonałości układu graficznego VIC-II w miejscach, gdzie żółty
 wykres zbliża się do osi, kolor osi zmieni się w tych miejscach na żółty.
+
+### TEXT
+
+Komenda LINE służy do rysowania odcinków o podanych współrzędnych początku i końca odcinka. Składnia:
+
+    TEXT [@x, y,] "treść" [, hscale=1 [, space=1 [, delay=0 [, drawmode=1]]]]
+
+Opcjonalne współrzędne *x* i *y* to odpowiednio numer kolumny w zakresie 0 do 319 licząc od lewej do prawej i
+numery wiersza w zakresie 0 do 199 licząc od góry do dołu. Obie wartości mogą być rzeczywista. Opjonalny parametr
+*hscale* jest mnożnikiem szerokości litery. Domyślna wartość to 1 - normalna szerokość. Gdy ten parametr jest 
+równy np. 2 to litery będą dwa razy szersze (symulacja liter wytłuszczonych). Kolejny opcjonalny
+parametr *space* to odstęp między literami, który domyślnie wynosi 1 piksel. Zwiększenie tego parametru
+dale efekt rozstrzelonych liter. Następny opcjonalny parametr *delay* decyduje o prędkości rysowania napisu.
+Domyślnie jest on równy 0 czyli rysowanie z pełną prędkością. Jeśli będzie miał wartość większą niż 0 to
+po narysowaniu każdej kolumny litery zostanie wstawione opóźnienie wynoszące około 1/60 sekundy pomnożone
+przez *delay*. Na przykład mała litera "o" składa się z 7 kolumn więc całkowity czas rysowania tej litery
+z parametrem *delay* = 2 będzie wynosił 14/60 sekundy. Ostatni opcjonalny parametr *drawmode* może mieć
+jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela będzie 1, 2 - wartość piksela zostanie
+zanegowana.
+
+Jednak, żeby napis się pojawił trzeba wcześniej załadować czcionki. Definicje czcionek muszą zostać
+załadowane do pamięci komputera w formie czterech tablic po 31 znaków:
+
+* $A000-$A19F - chr$(33)-chr$(63), znaki interpunkcyjne i cyfry
+* $A1A0-$A367 - chr$(65)-chr$(95), małe litery
+* $A368-$A51F - chr$(95)-chr$(127), wielkie litery
+* $A520-$A7FF - chr$(161)-chr$(191), polskie znaki
+
+W źródłach WORDPROCESSOR BASIC znajduje się przykładowa czcionka o nazwie PLFONTSLG.PRG. Ta
+czcionka ma specjalny mikroprogram ładujący czcionkę do obszaru $A000-$A7FF. Czcionkę trzeba
+załadować poleceniem:
+
+    LOAD "PLFONTSLG",8
+
+a następnie uruchomić poleceniem `RUN`.
+
+**Przykład 4, animowany napis**
+
+Poniższy program przełączy się w tryb graficzny, wyczyści ekran i narysuje napis "Hello World!", którego
+lewy górny narożnik będzie w punkcie (8, 8). Ten napis będzie pogrubiony, odstęp między literami będzie
+zwiększony do 2 pikseli, a poszczególne litery będą rysowane w spowolnionym tempie. Następnie program
+odczeka 1,5 sekundy i pod spodem napisze w tej samej linii 3 razy napis hello z odstępami 0,5 sekundy.
+Po narysowaniu ostatniego "hello" program będzie czekał na wciśnięcie dowolnego klawisza a gdy to nastąpi,
+wróci do trybu tekstowego.
+
+    10 hgr 1,0
+    20 cls
+    30 text @8,8,"Hello World!",2,2,1,1
+    40 pause 90
+    50 text @8,20,"Hello"
+    60 pause 30
+    70 text ", hello"
+    80 pause 30
+    90 text ", hello!"
+    100 pause
+    110 nrm
+    run
+
+Wszystkie napisy będą białe na czarnym tle.
 

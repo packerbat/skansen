@@ -1,13 +1,19 @@
 ;------------------------------------
-; szuka adresu z wzorcem litery.
-;
+; Szuka adresu z wzorcem litery.
+; Wzorce liter są pod BASIC-iem
+;    $A000-$A19F - chr$(33)-chr$(63), znaki interpunkcyjne i cyfry
+;    $A1A0-$A367 - chr$(65)-chr$(95), małe litery
+;    $A368-$A51F - chr$(65+128)-chr$(95+128), wielkie litery
+;    $A520-$AFFF - chr$(33+128)-chr$(63+128), polskie znaki
 ; input:
 ;    Y - szukana litera
+;    KY - numer znaku w rysowanym stringu (dolny bajt)
 ; output:
 ;    A - długość znalezionej litery albo 0 jeśli litera już została namalowana
 ;    PM - wskaźnik na literę
 ;    dolne DX - szerokość znaku
 ;    Z - 1=znak już został namalowany, 0=trzeba malować znak w PM
+;    Y - ma wartość 0 gdy litera znaleziona
 
 .export FND
 .export DX, DY, PM
@@ -36,7 +42,7 @@ FNDS:
     lsr
     lsr
     lsr
-    and #$0E        ;litera podzielona przez 16 i zaokrąglona do parzystych
+    and #$0E        ;litera podzielona przez 32 a potem pomnożona przez 2 wyznacza jeden z 8 bloków pamięci
     tax
     lda TABL,x
     sta PM
@@ -72,7 +78,7 @@ SPC:            ;rysowanie spacji o podanej ilości pikseli
     ldy KY      ;numer bieżącej litery
     jsr NUM     ;pobiera parametr całkowity (8bit) do DX
     dey
-    sty KY      ;Y cofa się do znaku przed nierozpoznaną liczbą
+    sty KY      ;Y cofa się do znaku ostatniej cyfry 0..9
     lda #$00    ;Z=1 oznacza koniec malowania
     rts
 .endproc

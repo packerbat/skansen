@@ -1,12 +1,14 @@
 ;------------------------------------
 ; rysuje jedną literę na ekranie graficznym
-; używa górnego bajta zmiennej KY
+; używa górnego bajta zmiennej KY, PM-adres wzorca litery,
+;    DX-szerokość litery (dolny bajt), DY-numer litery (dolny bajt)
+;    DX-przechowalnia (górny bajt), DY-licznik pętli (górny bajt)
 ; używa $02 z zeropage
 ; input:
 ;    A - litera do namalowania
 ;    SX - liczba powtórzeń tej litery, domyślnie 1
 ;    WOL - odstęp czasu między literami w 1/60 sek.
-; 
+;    ODS - domyślny odstęp (1 czyli 8 pikseli)
 
 .export LETT
 .import CZEK, POT, FND, SX, DX:zeropage, DY:zeropage, XC:zeropage, YC:zeropage, KY:zeropage, PM:zeropage
@@ -30,7 +32,7 @@ L14:
     inc DY          ;DY=2
 L15:
     iny
-    cpy $02
+    cpy $02         ;w $02 jest długość wzorca włącznie ze znacznikiem długości wzorca
     bcs koniec_lett
     lda (PM),y
     sty DX+1        ;DX+1 przechowalnia dla Y
@@ -39,7 +41,7 @@ L15:
 L19:
     asl
     bcc :+
-    pha             ;bit jest 1 wić trzeba namalować
+    pha             ;bit jest 1 więc trzeba namalować
     jsr POT
     pla
 :   inc YC          ;obniżam pozycję na ekranie
@@ -54,17 +56,17 @@ L19:
     inc XC
     bne :+
     inc XC+1
-:   lda YC          ;zmiększyłem XC
+:   lda YC          ;XC += 1
     sec
     sbc #$10
     sta YC
     bcs :+
-    dec YC+1
-:   dec KY+1        ;odjąłem 16 od YC
-    beq L13         ;trzeba powtórzyć jeszcze raz ten znak
+    dec YC+1        ;YC -= 16
+:   dec KY+1        ;SX -= 1
+    beq L13         ;trzeba powtórzyć jeszcze raz ten znak, ale to nie ma sensu
     dey
     dey
-    JMP L14
+    jmp L14
 
 koniec_lett:
     lda #$37

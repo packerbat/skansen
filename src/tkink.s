@@ -25,7 +25,7 @@
     ora $02
     sta HICOLOR
 
-    jsr $E206    ;Basic Check Default Parameters, przerywa CRFG jeśli nie ma parametru
+    jsr $E206    ;Basic Check Default Parameters, przerywa TkINK jeśli nie ma parametru
     jsr $E200    ;Basic Get Next One Byte Parameter
     stx $D020    ;VIC Border Color
     rts

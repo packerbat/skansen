@@ -1,11 +1,14 @@
-TARGETS = wpbasic.bin skansen.d64
+TARGETS = wpbasic.bin plfontslg.prg skansen.d64
 OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o tknew.o tkink.o tkhgr.o tknrm.o tkcolour.o tkpause.o tkcls.o tkbasic.o tksei.o tkcli.o tkvolume.o fnscroll.o getl.o num.o fnd.o gett.o lett.o geta.o cxy.o xyc.o pot.o czek.o tktext.o tkplot.o getk.o getpk.o tkline.o
 
 all: $(TARGETS)
 
-skansen.d64: wpbasic.prg
+skansen.d64: wpbasic.prg plfontslg.prg
 	rm -f skansen.d65
-	c1541 -format diskname,id d64 skansen.d64 -attach skansen.d64 -write wpbasic.prg wpbasic
+	c1541 -format diskname,id d64 skansen.d64 -attach skansen.d64 -write wpbasic.prg wpbasic -write plfontslg.prg plfontslg
+
+plfontslg.prg: plfontslg.o
+	ld65 -v -Ln plfontslg.lbl -C plfontslg.cfg -o $@ plfontslg.o c64.lib
 
 wpbasic.prg: bootloader.o wpbasic.bin
 	ld65 -v -Ln bootloader.lbl -C bootloader.cfg -o $@ bootloader.o c64.lib
