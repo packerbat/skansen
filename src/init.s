@@ -1,7 +1,7 @@
 ;---------------------------------------------------------- 
 ; sekwencja inicjująca rozszerzenie basica
 
-.export SX, ODS
+.export SX, ODS, XK, YK
 .import TEV, DOIT, LIST, TOKEN, NOR, NSTOP, TkNEW
 
 .segment "CODE"

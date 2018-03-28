@@ -1,5 +1,5 @@
 TARGETS = wpbasic.bin skansen.d64
-OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o tknew.o tkink.o tkhgr.o tknrm.o tkcolour.o tkpause.o tkcls.o tkbasic.o tksei.o tkcli.o tkvolume.o fnscroll.o getl.o num.o fnd.o gett.o lett.o geta.o cxy.o xyc.o pot.o czek.o tktext.o tkplot.o
+OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o tknew.o tkink.o tkhgr.o tknrm.o tkcolour.o tkpause.o tkcls.o tkbasic.o tksei.o tkcli.o tkvolume.o fnscroll.o getl.o num.o fnd.o gett.o lett.o geta.o cxy.o xyc.o pot.o czek.o tktext.o tkplot.o getk.o getpk.o tkline.o
 
 all: $(TARGETS)
 

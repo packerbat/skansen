@@ -91,7 +91,7 @@ Komenda PLOT służy do zmiany stanu piksela w trybie wysokiej rozdzielczości. 
 
 Współrzędna *x* to numer kolumny w zakresie 0 do 319 licząc od lewej do prawej, a współrzędna *y* to
 numer wiersza w zakresie 0 do 199 licząc od góry do dołu. Obie wartości mogą być rzeczywiste. Opcjonalny
-parametr *sposób-zmian* może mieć jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela
+parametr *sposób-zmiany* może mieć jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela
 będzie 1, 2 - wartość piksela zostanie zanegowana.
 
 **Przykład 2, wykres punktowy**
@@ -110,4 +110,44 @@ nastąpi, wróci do trybu tekstowego.
     run
 
 Wykres będzie się składał z białych pikseli na czarnym tle a ramka będzie miała niezmieniony kolor.
+
+### LINE
+
+Komenda LINE służy do rysowania odcinków o podanych współrzędnych początku i końca odcinka. Składnia:
+
+    LINE TO x2, y2 [, <sposób-zmiany>]
+    
+albo
+
+    LINE x1, y1, x2, y2 [, <sposób-zmiany>]
+
+Współrzędne *x1* i *x2* to numery kolumn w zakresie 0 do 319 licząc od lewej do prawej, a współrzędne *y1* i *y2* to
+numery wierszy w zakresie 0 do 199 licząc od góry do dołu. Każda z czterech wartości może być rzeczywista. Opcjonalny
+parametr *sposób-zmiany* może mieć jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela
+będzie 1, 2 - wartość piksela zostanie zanegowana.
+
+**Przykład 3, wykres odcinkowy**
+
+Poniższy program przełączy się w tryb graficzny, wyczyści ekran, i narysuje wykres funkcji sin(x)/x rozciągnięty
+na cały obszar ekranu. Po narysowaniu wykresu program będzie czekał na wciśnięcie dowolnego klawisza a gdy to
+nastąpi, wróci do trybu tekstowego.
+
+    10 hgr 1,0
+    20 cls
+    30 line 160,0,160,200
+    40 line 0,100,320,100
+    50 ink 3
+    60 x=0.1*(0-160)+1e-6
+    70 plot 0,100-100*sin(x)/x,1
+    80 for i=1 to 319
+    90 x=0.1*(i-160)+1e-6
+    100 line to i,100-100*sin(x)/x
+    110 next
+    120 pause
+    130 nrm
+    run
+
+Wykres będzie się składał z żółtych pikseli na czarnym tle a ramka będzie miała niezmieniony kolor. Kolor
+osi będzie biały jednak ze względu na niedoskonałości układu graficznego VIC-II w miejscach, gdzie żółty
+wykres zbliża się do osi, kolor osi zmieni się w tych miejscach na żółty.
 
