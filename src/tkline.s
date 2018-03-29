@@ -8,7 +8,7 @@
 ; output:
 ;
 
-.export TkLINE
+.export TkLINE, KX
 .import GETPK, POT, XK, YK, KY:zeropage, XC:zeropage, YC:zeropage, DX:zeropage, DY:zeropage, PM:zeropage
 
 .segment "FPAC2": zeropage

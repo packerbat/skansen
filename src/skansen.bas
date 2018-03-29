@@ -1,0 +1,6 @@
+10 hgr 1,0
+20 cls
+30 dram$="c18a129a128g17Ge128e129ha128a128Ac18hg17Ge128e129ha128a128Ac18"
+40 draw @31,174,dram$
+60 pause
+70 nrm

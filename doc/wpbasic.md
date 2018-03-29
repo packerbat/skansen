@@ -158,7 +158,7 @@ Komenda LINE służy do rysowania odcinków o podanych współrzędnych początk
     TEXT [@x, y,] "treść" [, hscale=1 [, space=1 [, delay=0 [, drawmode=1]]]]
 
 Opcjonalne współrzędne *x* i *y* to odpowiednio numer kolumny w zakresie 0 do 319 licząc od lewej do prawej i
-numery wiersza w zakresie 0 do 199 licząc od góry do dołu. Obie wartości mogą być rzeczywista. Opjonalny parametr
+numery wiersza w zakresie 0 do 199 licząc od góry do dołu. Obie wartości mogą być rzeczywista. Opcjonalny parametr
 *hscale* jest mnożnikiem szerokości litery. Domyślna wartość to 1 - normalna szerokość. Gdy ten parametr jest 
 równy np. 2 to litery będą dwa razy szersze (symulacja liter wytłuszczonych). Kolejny opcjonalny
 parametr *space* to odstęp między literami, który domyślnie wynosi 1 piksel. Zwiększenie tego parametru
@@ -209,4 +209,47 @@ wróci do trybu tekstowego.
     run
 
 Wszystkie napisy będą białe na czarnym tle.
+
+### DRAW
+
+Komenda DRAW służy do rysowania łamanej, której odcinki zmieniają kąt nie mniej niż 45&deg; względem siebie.
+Składnia:
+
+    DRAW [@x, y,] "kształt" [, rot=0 [, delay=0 [, drawmode=1]]]
+
+Opcjonalne współrzędne *x* i *y* to odpowiednio numer kolumny w zakresie 0 do 319 licząc od lewej do prawej i
+numery wiersza w zakresie 0 do 199 licząc od góry do dołu. Obie wartości mogą być rzeczywista. Opcjonalny
+parametr *rot* to globalny obrót rysunku, który domyślnie wynosi 0 czyli bez obrotu. Zwiększenie tego
+parametru w zakresie 1, 2, ... 7 daje obrót *rot* &times; 45&deg;. Następny opcjonalny parametr *delay* decyduje
+o prędkości rysowania punktów na ekranie. Domyślnie jest on równy 0 czyli rysowanie z pełną prędkością.
+Jeśli będzie miał wartość większą niż 0 to po narysowaniu każdego punktu zostanie wstawione opóźnienie
+wynoszące około 1/60 sekundy pomnożone przez *delay*. Ostatni opcjonalny parametr *drawmode* może mieć
+jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela będzie 1, 2 - wartość
+piksela zostanie zanegowana.
+
+Definicja kształtu to wyrażenie tekstowe, którego znaki mają specjalne znaczenie dla komendy DRAW. Każdy ruch
+może się odbywać w jednym z 8. kierunków na podaną odległość:
+
+    "<k1>[<d2>]<k2>[<d2>]<k3>[<d3>] ... <kn>[<dn>]"
+
+Kierunki są wyznaczone przez litery 'a' ... 'h' gdy komenda DRAW ma rysować i 'A' ... 'H' gdy ma nie rysować
+punktów. Odległości są podawane w pikselach w zakresie 1 do 255 (liczba całkowita). Jeśli dystans zostanie
+pominięty to DRAW przyjmie wartość 1.
+
+Poniższy program przełączy się w tryb graficzny, wyczyści ekran i będzie rysował ośmiokąt narysowany
+z odcinków w połowie narysowanych a w połowie nie, który obróci się 8 razy wokół środka ekranu. Po usunięciu
+ostatniego ośmiokąta program wróci do trybu tekstowego i zakończy działanie.
+
+    10 hgr 1,0
+    20 cls
+    30 dram$="a10A10b10B10c10C10d10D10e10E10f10F10g10G10h10H10"
+    40 for i=0 to 7
+    50 draw @160,100,dram$,i,0,2
+    60 pause 30
+    70 draw @160,100,dram$,i,0,2
+    80 next
+    100 nrm
+    run
+
+Figura będzie miała kolor biały na czarnym tle.
 
