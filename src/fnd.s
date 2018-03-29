@@ -3,21 +3,23 @@
 ; Wzorce liter są pod BASIC-iem
 ;    $A000-$A19F - chr$(33)-chr$(63), znaki interpunkcyjne i cyfry
 ;    $A1A0-$A367 - chr$(65)-chr$(95), małe litery
-;    $A368-$A51F - chr$(65+128)-chr$(95+128), wielkie litery
-;    $A520-$AFFF - chr$(33+128)-chr$(63+128), polskie znaki
+;    $A368-$A51F - chr$(97)-chr$(159), wielkie litery
+;    $A520-$AFFF - chr$(161)-chr$(191), polskie znaki
 ; input:
 ;    Y - szukana litera
 ;    KY - numer znaku w rysowanym stringu (dolny bajt)
+;    SX - skala szerokości znaku (2 = dwa razy szerszy znak)
+;    ODS - liczba pikseli dostępu po znaku (domyslnie 1).
 ; output:
 ;    A - długość znalezionej litery albo 0 jeśli litera już została namalowana
 ;    PM - wskaźnik na literę
-;    dolne DX - szerokość znaku
+;    dolne DX - szerokość znaku włącznie z ODS
 ;    Z - 1=znak już został namalowany, 0=trzeba malować znak w PM
 ;    Y - ma wartość 0 gdy litera znaleziona
 
 .export FND
 .export DX, DY, PM
-.import KY:zeropage, ODS, NUM
+.import KY:zeropage, ODS, NUM, SX
 
 ;to są tablice z literami schowane pod BASIC-iem
 .segment "CODE"
@@ -68,9 +70,13 @@ FNDS:
 :   lda (PM),y      ;znalazłem, więc pobieram długość bo ona nie może być 0
 :   rts
 
-:   asl DX          ;dolne 5 bitów litery to same zera
-    asl DX
-    asl DX
+:   lda SX
+    asl            ;dolne 5 bitów litery to same zera czyli spacja o szerokości 8 pikseli*SX + ODS
+    asl
+    asl
+    clc
+    adc DX
+    sta DX
     lda #$00        ;odstęp z ODS (domyślnie 1) jest mnożony przez 8 i Z=1 kończy rysowanie
     rts
 

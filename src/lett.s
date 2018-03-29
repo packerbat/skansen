@@ -8,7 +8,7 @@
 ;    A - litera do namalowania
 ;    SX - liczba powtórzeń tej litery, domyślnie 1
 ;    WOL - odstęp czasu między literami w 1/60 sek.
-;    ODS - domyślny odstęp (1 czyli 8 pikseli)
+;    ODS - domyślny odstęp (1 piksel)
 
 .export LETT
 .import CZEK, POT, FND, SX, DX:zeropage, DY:zeropage, XC:zeropage, YC:zeropage, KY:zeropage, PM:zeropage
@@ -52,7 +52,7 @@ L19:
     ldy DX+1        ;Y z przechowalni wraca na tablicę PM
     dec DY
     bne L15         ;litery mają po 2 bajty w pionie
-    jsr CZEK        ;odczelanie WOL jednostek czasu
+    jsr CZEK        ;odczekanie WOL jednostek czasu
     inc XC
     bne :+
     inc XC+1
@@ -71,7 +71,7 @@ L19:
 koniec_lett:
     lda #$37
     sta $01         ;turn on BASIC
-    lda DX
+    lda DX          ;FND przygotowało DX = szerokość litery*SX+ODS dla liter już narysowanych i ODS dla liter, które trzeba było rysować.
     clc
     adc XC
     sta XC

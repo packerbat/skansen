@@ -3,7 +3,7 @@
 ; zmienia: wszystko
 
 .export TEV
-.import FnSCROLL
+.import FnSCROLL, FnTEXT
 
 .segment "CODE"
 .proc TEV
@@ -20,10 +20,6 @@
     sec
     sbc #$e1        ;moje funkcje mają kody od $E1
     asl
-    pha
-    jsr $0073       ;CHRGET: Get next Byte of BASIC Text
-    jsr $aefa       ;Check '('
-    pla
     tay
     lda FNVEC+1,y
     pha
@@ -36,7 +32,6 @@
 .endproc
 
 .segment "RODATA"
-FN1 = 1     ;usunąć po zdefiniowaniu własciwych funkcji
 FN2 = 2
 FN4 = 4
-FNVEC: .word FN1-1, FN2-1, FnSCROLL-1, FN4-1
+FNVEC: .word FnTEXT-1, FN2-1, FnSCROLL-1, FN4-1

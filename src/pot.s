@@ -2,7 +2,7 @@
 ; 
 ; 
 
-.export POT
+.export POT, CO
 .import XC:zeropage, YC:zeropage, PTYP, HICOLOR
 
 .segment "UTIL": zeropage

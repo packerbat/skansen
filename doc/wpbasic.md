@@ -210,6 +210,35 @@ wróci do trybu tekstowego.
 
 Wszystkie napisy będą białe na czarnym tle.
 
+Słowo kluczowe `TEXT` może również wystąpić w wyrażeniach arytmetycznych. Jest to nazwa funkcji, której
+zadaniem jest obliczyć jaką szerokość zajmie podany napis na ekranie graficznym. Oczywiście ta funkcja
+niczego nie rysuje a tryb graficzny nie musi być wtedy włączony. Ważne, żeby były załadowane czcionki
+w pamięci operacyjnej pod adresem $A000-$A7FF. Składnia:
+
+    TEXT("treść", hscale, space)
+
+Parametry *hascale* i *space* mają takie samo znaczenie ale tym razem są obowiązkowe.
+
+**Przykład 5, centrowanie napisów**
+
+    10 hgr 1,0
+    20 cls
+    30 t$="Hello World!"
+    40 s$="Hello, hello, hello!"
+    50 ink 6
+    60 text @160-text(t$,2,6)/2,8, t$, 2,6
+    70 ink 5
+    80 text @160-text(s$,1,1)/2,28, s$
+    90 pause
+    100 nrm
+    run
+
+Górny napis będzie pogrubiony (skala 2) a jego litery będą rozstrzelone z odstępem 6 pikseli.
+Dolny napis będzie napisany normalną wielkością ale jak widać w funkcji text() muszą wystąpić dwie
+wartości 1 choć komenda rysująca tekst ich nie potrzebuje. Górny napis będzie w kolorze niebieskim a 
+dolny w kolorze zielonym. Żeby kolor zielony nie zachodził na niebieski, napis dolny musi być obniżony
+o odpowiednią odległość.
+
 ### DRAW
 
 Komenda DRAW służy do rysowania łamanej, której odcinki zmieniają kąt nie mniej niż 45&deg; względem siebie.
@@ -233,8 +262,9 @@ może się odbywać w jednym z 8. kierunków na podaną odległość:
     "<k1>[<d2>]<k2>[<d2>]<k3>[<d3>] ... <kn>[<dn>]"
 
 Kierunki są wyznaczone przez litery 'a' ... 'h' gdy komenda DRAW ma rysować i 'A' ... 'H' gdy ma nie rysować
-punktów. Odległości są podawane w pikselach w zakresie 1 do 255 (liczba całkowita). Jeśli dystans zostanie
-pominięty to DRAW przyjmie wartość 1.
+punktów. Litery "a" i "A" to ruch w prawo, litery "b", "B" to ruch skośny prawo-dół i tak dalej zgodnie 
+z ruchem wskazówek zegara. Odległości są podawane w pikselach w zakresie 1 do 255 (liczba całkowita).
+Jeśli dystans zostanie pominięty to DRAW przyjmie wartość 1.
 
 Poniższy program przełączy się w tryb graficzny, wyczyści ekran i będzie rysował ośmiokąt narysowany
 z odcinków w połowie narysowanych a w połowie nie, który obróci się 8 razy wokół środka ekranu. Po usunięciu
