@@ -270,6 +270,8 @@ Poniższy program przełączy się w tryb graficzny, wyczyści ekran i będzie r
 z odcinków w połowie narysowanych a w połowie nie, który obróci się 8 razy wokół środka ekranu. Po usunięciu
 ostatniego ośmiokąta program wróci do trybu tekstowego i zakończy działanie.
 
+**Przykład 6, animowany ośmiokąt**
+
     10 hgr 1,0
     20 cls
     30 dram$="a10A10b10B10c10C10d10D10e10E10f10F10g10G10h10H10"
@@ -283,3 +285,32 @@ ostatniego ośmiokąta program wróci do trybu tekstowego i zakończy działanie
 
 Figura będzie miała kolor biały na czarnym tle.
 
+## Zmiany istniejących komend BASIC-a
+
+### RESTORE
+
+Wbudowana komenda RESTORE nie ma parametrów i cofa wskaźnik *DATA* zawsze na początek programu. WPBASIC
+pozwala na podanie numeru linii do której ma się cofnąć wskaźnik *DATA*. Składnia:
+
+    RESTORE [linenumber]
+
+Parametr *linenumber* może być dowolnym wyrażeniem arytmetycznym, które zostanie zaokrąglone do liczby
+całkowitej 16-bitowej bez znaku, jednak trzeba pamiętać, że CBM BASIC dopuszcza jedynie numery linii
+w zakresie 0..63999. Linia o wskazanym numerze nie musi istnieć bo jeśli RESTORE nie znajdzie takiej
+linii to ustawi wskaźnik na następnej linii.
+
+**Przykład 7, eksperymenty z RESTORE**
+
+    10 restore 110
+    20 read a,b: print 110,a,b
+    30 restore 100
+    40 read c,d: print 100,c,d
+    50 restore 120
+    60 read e,f: print 120,e,f
+    100 data 10,20,30,40
+    110 data 50,60,70,80
+    run
+
+Ten program zakończy się błędem `?out of data error in 60` bo `restore 120` ustawi wskaźnik na końcu
+programu i komenda `read` nie znajdzie już żadnych danych od odczytania. Wcześniej na ekranie wyświetli
+się `110  50  60` i `100  10  20`.

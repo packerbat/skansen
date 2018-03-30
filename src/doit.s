@@ -17,6 +17,8 @@
 .proc DOIT1
     beq KONIEC
     php
+    cmp #$8c
+    beq :++
     cmp #$cd
     bcc :+          ;$01..$CC - nie moje
     cmp #$e5
@@ -32,9 +34,22 @@
     lda TOKVEC,y
     pha
     jmp $0073   ;CHRGET: Get next Byte of BASIC Text
-
+    
 :   plp
     jmp $A7EF   ;Perform BASIC Keyword
+
+:   plp         ;moja obsługa RESTORE
+    jsr $0073   ;next byte
+    beq :+      ;bez parametru
+    jsr $AD8A      ;Confirm result
+    jsr $B7F7      ;Convert FAC#1 to Integer to $14/$15
+    jsr $A613      ;Search for line number
+    lda $5F
+    ldy $60
+    sec
+    sbc #$01
+    jmp $A824      ;RESTORE Read to specific line number
+:   jmp $A81D      ;original Perform [restore]
 
 KONIEC:
     rts         ;skok do wykonania mojego tokena, akumulator ma następny znak programu
