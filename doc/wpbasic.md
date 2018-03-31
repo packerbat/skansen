@@ -18,7 +18,7 @@ a po załadowaniu, uruchamiamy poleceniem:
 Komenda HGR służy do przełączania układu VIC-II w tryb graficzny wysokiej rozdzielczości (320 &times; 200).
 Składnia:
 
-    HGR [<kolor piksela> [, <kolor tła> [, <kolor ramki>]]]
+    HGR [fgcolor [, bgcolor [, framecolor]]]
 
 Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to parametry opcjonalne.
 
@@ -26,7 +26,7 @@ Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to
 
 Komenda INK służy do ustawienia 3 kolorów - piksea, tła i ramki. Składnia:
 
-    INK [<kolor piksela> [, <kolor tła> [, <kolor ramki>]]]
+    INK [fgcolor [, bgcolor [, framecolor]]]
 
 Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to parametry opcjonalne.
 Akurat dla tej komendy pominięcie wszystkich kolorów nie ma większego sensu.
@@ -35,7 +35,7 @@ Akurat dla tej komendy pominięcie wszystkich kolorów nie ma większego sensu.
 
 Komenda CLS służy do wyczyszczenia ekranu w trybie graficznym. Składnia:
 
-    CLS [<kolor piksela> [, <kolor tła> [, <kolor ramki>]]]
+    CLS [fgcolor [, bgcolor [, framecolor]]]
 
 Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to parametry opcjonalne.
 
@@ -44,7 +44,7 @@ Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to
 Komenda NRM służy do przełączania układu VIC-II w tryb tekstowy (40 &times; 25).
 Składnia:
 
-    NRM [<kolor litery> [, <kolor tła> [, <kolor ramki>]]]
+    NRM [<kolor litery> [, bgcolor [, framecolor]]]
 
 Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to parametry opcjonalne.
 
@@ -52,7 +52,7 @@ Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to
 
 Komenda COLOUR służy do zmiany kolorów w trybie tekstowym. Składnia:
 
-    COLOUR [<kolor litery> [, <kolor tła> [, <kolor ramki>]]]
+    COLOUR [chrcolor [, bgcolor [, framecolor]]]
 
 Wszystkie 3 kolory są liczbami całkowitymi w zakresie 0-15 i jak widać są to parametry opcjonalne.
 Tu także pominięcie wszystkich kolorów nie ma większego sensu.
@@ -266,11 +266,11 @@ punktów. Litery "a" i "A" to ruch w prawo, litery "b", "B" to ruch skośny praw
 z ruchem wskazówek zegara. Odległości są podawane w pikselach w zakresie 1 do 255 (liczba całkowita).
 Jeśli dystans zostanie pominięty to DRAW przyjmie wartość 1.
 
+**Przykład 6, animowany ośmiokąt**
+
 Poniższy program przełączy się w tryb graficzny, wyczyści ekran i będzie rysował ośmiokąt narysowany
 z odcinków w połowie narysowanych a w połowie nie, który obróci się 8 razy wokół środka ekranu. Po usunięciu
 ostatniego ośmiokąta program wróci do trybu tekstowego i zakończy działanie.
-
-**Przykład 6, animowany ośmiokąt**
 
     10 hgr 1,0
     20 cls
@@ -284,6 +284,44 @@ ostatniego ośmiokąta program wróci do trybu tekstowego i zakończy działanie
     run
 
 Figura będzie miała kolor biały na czarnym tle.
+
+### FILL
+
+Komenda FILL służy do wypełniania pamięci kolorów w trybie wysokiej rozdzielczości. Można zmieniać
+prostokątny obszar ekranu o podanych współrzędnych lewego górnego narożnika i o podanych rozmiarach.
+Składnia:
+
+    FILL row, col, width, height [, fgcolor [, bgcolor]]
+
+Kolory w trybie wysokiej rozdzielczości można zmieniać dla prostokątów o rozmiarach 8&times;8 pikseli.
+Ekran wysokiej rozdzielczości ma 1000 takich prostokątów (25 wierszy po 40 kolumn). Pierwszy parametr
+*row* ustala numer wiersza w zakresie 0 do 24, od którego zaczyna się prostokątny obszar zmiany koloru.
+Parametr *col* ustala numer kolumny w zakresie 0 do 39. Parametry *width* i *heigth* ustalają rozmiar
+obszaru - odpowiednio szerokość (liczba kolumn) i wysokość (liczba wierszy). Opcjonalny parametr
+*fgcolor* ustawia kolor piksela o wartości 1 (w zakresie 0-15) a parametr *bgcolor* - kolor piksela
+o wartości 0 (też w zakresie 0-15). Jeśli parametry *fgcolor* lub *bgcolor* nie zostaną podane to
+FILL przyjmie kolory ustalone przez polecenie INK. Jeśli kolory zostaną podane, to staną się nowymi
+kolorami domyślnymi.
+
+**Przykład 7, nogowanie półekranów**
+
+    10 hgr 1,0
+    20 cls
+    30 line 0,0,320,200:line 0,200,320,0
+    40 pause 60
+    50 fill 0,20,20,25,0,1
+    60 pause 60
+    70 fill 0,0,20,25,0,1
+    80 pause 60
+    90 fill 0,20,20,25,1,0
+    100 pause 60
+    110 fill 0,0,20,25,1,0
+    120 pause 60
+    130 nrm
+    run
+
+Program wyświetli białe przekątne ekranu na czarnym tle a następnie, co 50 sekund neguje kolor
+lewej i prawej połowy ekranu.
 
 ## Zmiany istniejących komend BASIC-a
 
@@ -299,7 +337,7 @@ całkowitej 16-bitowej bez znaku, jednak trzeba pamiętać, że CBM BASIC dopusz
 w zakresie 0..63999. Linia o wskazanym numerze nie musi istnieć bo jeśli RESTORE nie znajdzie takiej
 linii to ustawi wskaźnik na następnej linii.
 
-**Przykład 7, eksperymenty z RESTORE**
+**Przykład 8, eksperymenty z RESTORE**
 
     10 restore 110
     20 read a,b: print 110,a,b

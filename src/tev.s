@@ -1,5 +1,5 @@
 ;------------------------------------
-; procedura TEV - rozpoznaje tokeny od E1 do E4
+; procedura TEV - rozpoznaje tokeny od E2 do E5
 ; zmienia: wszystko
 
 .export TEV
@@ -11,14 +11,14 @@
     sta $0D         ;Data type Flag, $00 = Numeric, $FF = String
     jsr $0073       ;CHRGET: Get next Byte of BASIC Text
     php
-    cmp #$e1
-    bcc :+          ;$00..$E0 - nie moje
-    cmp #$e5
-    bcs :+          ;$e5..$ff - nie moje
+    cmp #$e2
+    bcc :+          ;$00..$E1 - nie moje
+    cmp #$e6
+    bcs :+          ;$e6..$ff - nie moje
 
     plp
     sec
-    sbc #$e1        ;moje funkcje mają kody od $E1
+    sbc #$e2        ;moje funkcje mają kody od $E2
     asl
     tay
     lda FNVEC+1,y

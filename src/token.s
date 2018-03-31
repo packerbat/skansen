@@ -148,9 +148,10 @@ TOKTB: .byte "u",'p'+$80       ;token $CD
        .byte "pat",'h'+$80     ;token $DE
        .byte "se",'i'+$80      ;token $DF
        .byte "basi",'c'+$80    ;token $E0
-       .byte "tex",'t'+$80     ;token $E1
-       .byte "sprit",'e'+$80   ;token $E2
-       .byte "scrol",'l'+$80   ;token $E3
-       .byte "pla",'y'+$80     ;token $E4
+       .byte "fil",'l'+$80     ;token $E1
+       .byte "tex",'t'+$80     ;token $E2
+       .byte "sprit",'e'+$80   ;token $E3
+       .byte "scrol",'l'+$80   ;token $E4
+       .byte "pla",'y'+$80     ;token $E5
        .byte $00
 
