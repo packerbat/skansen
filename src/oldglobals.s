@@ -16,11 +16,25 @@
 ;YK        = $02AC
 ;SX        = $02AE
 ;ODS       = $02AF
+
 ;DEL       = $02B0
 ;WY        = $02B1
 ;AN        = $02B3
 ;VOC       = $02B5
 ;VGT       = $02B6
+
+;DEL2      = $02B7
+;WY2       = $02B8
+;AN2       = $02BA
+;VOC2      = $02BC
+;VGT2      = $02BD
+
+;DEL3      = $02BE
+;WY3       = $02BF
+;AN3       = $02C1
+;VOC3      = $02C3
+;VGT3      = $02C4
+
 ;KOL       = $02C5
 ;SAD       = $02C6
 ;WOL       = $02C8
