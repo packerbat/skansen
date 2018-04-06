@@ -3,11 +3,13 @@
 ;   treść, opcjonalne parametry SX=1, ODS=1, WOL=0, PTYP
 ; 
 
-.export GETT, WOL
-.import CXY, SX, ODS, GETA
+.export GETT, SX, ODS, WOL
+.import CXY, GETA
 
-.segment "BSS"
-WOL:    .res 2
+.segment "DATA"
+SX:    .byte 1
+ODS:   .byte 1
+WOL:   .byte 0
 
 .segment "CODE"
 .proc GETT

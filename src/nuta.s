@@ -12,7 +12,7 @@
 .export NUTA
 
 .segment "RODATA"
-TABN: .byte 188,'c',100,'d',101,'e','f',102,'g',103,'a',97,'h',104
+TABN: .byte 188,'c','C','d','D','e','f','F','g','G','a','A','h','H'
       .byte 188,'c',172,'d',177,187,163,165,'g',176,'a',116,'h',104
 
 .segment "CODE"

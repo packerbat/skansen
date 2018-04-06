@@ -4,9 +4,9 @@ OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o \
        fnscroll.o getl.o num.o fnd.o gett.o lett.o geta.o cxy.o xyc.o pot.o czek.o tktext.o \
        tkplot.o getk.o getpk.o tkline.o \
        getd.o orot.o dod.o tkdraw.o tkfill.o \
-       cod.o fntext.o \
+       cod.o fntext.o fnplay.o \
        nuta.o hex.o getn.o tkmusic.o \
-       tkplay.o tkvoice.o
+       tkplay.o tkvoice.o mirq.o irq.o
 
 all: $(TARGETS)
 

@@ -1,8 +1,7 @@
 ;---------------------------------------------------------- 
 ; sekwencja inicjująca rozszerzenie basica
 
-.export SX, ODS, XK, YK, DEL, WY, AN, VOC, VGT
-.import TEV, DOIT, LIST, TOKEN, NOR, NSTOP, TkNEW
+.import TEV, DOIT, LIST, TOKEN, NOR, NSTOP, IRQ
 
 .segment "CODE"
     ldx #$00
@@ -21,12 +20,6 @@
     ldy #>TX1
     jsr $AB1E     ;Output String
 
-    lda #0       ;wyczyszczenie rejestrów XK, YK, SX, ODS, DEL, WY, AN, VOC
-    ldx #$0B     ;zakłada, że są pod rząd bez odstępów
-:   sta XK,x
-    dex
-    bpl :-
-
     ldx #$0B          ;podmiana 6-ciu kolejnych werktorów BASICA
 :   lda NVC,x
     sta $0300,x       ;Vector: BASIC Error Message
@@ -38,44 +31,20 @@
     sta $0328      ;Kernal Stop Routine Vector
     sty $0329
 
-    ;sei          ;podmiana przerwania na moją procedurę
-    ;lda #<IRQ
-    ;ldy #>IRQ
-    ;sta $0314    ;Hardware IRQ Interrupt Vector
-    ;sty $0315
-    ;cli
+    sei          ;podmiana przerwania na moją procedurę
+    lda #<IRQ
+    ldy #>IRQ
+    sta $0314    ;Hardware IRQ Interrupt Vector
+    sty $0315
+    cli
 
     rts           ;return from SYS(2069)
 
 .segment "RODATA"
 NVC: .word  NOR,  $A483, TOKEN, LIST,  DOIT,   TEV
-OVC: .word $E38B, $A483, $A57C, $A71A, $A7E4, $AE86
-
-;  NOR, $A483, TOKEN,  LIST,  DOIT,  TEV
+;OVC: .word $E38B, $A483, $A57C, $A71A, $A7E4, $AE86
+;            NOR,  $A483, TOKEN,  LIST,  DOIT,  TEV
 
 TX1: .byte 155,147,"    ..... Wordprocessor BASIC .....", $0D, $0D
      .byte         "        34816 BASIC bytes free", $0D, $00
 
-.segment "BSS"
-XK:    .res 2
-YK:    .res 2
-SX:    .res 1
-ODS:   .res 1
-
-DEL:   .res 1
-WY:    .res 2
-AN:    .res 2
-VOC:   .res 1
-VGT:   .res 1
-
-DEL2:  .res 1
-WY2:   .res 2
-AN2:   .res 2
-VOC2:  .res 1
-VGT2:  .res 1
-
-DEL3:  .res 1
-WY3:   .res 2
-AN3:   .res 2
-VOC3:  .res 1
-VGT3:  .res 1

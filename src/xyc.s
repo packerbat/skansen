@@ -10,7 +10,7 @@
 ;    YC - 16 bitowa liczba całkowita
 
 .export XYC
-.import XC:zeropage, YC:zeropage
+.import XC, YC
 
 .segment "CODE"
 .proc XYC

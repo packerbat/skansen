@@ -3,7 +3,7 @@
 ; jego zadaniem jest ustawić parametry 3 generatorów dźwięku z wyjątkiem wysokości dźwięku
 ; genXconf = AD[SR[FC[0W[WW]]]]
 ;    A - attack 0..f
-;    D - decat 0..f
+;    D - decay 0..f
 ;    S - sustain 0..f
 ;    R - release 0..f
 ;    F - waveform 1-tiangle, 2-sawtooth, 4-pulse, 8-noise

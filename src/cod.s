@@ -5,8 +5,10 @@
 ;    CO - powiększone o A
 ;    A - dolne 8 bitów sumy
 
-.export COD
-.import CO:zeropage
+.export COD, CO
+
+.segment "UTIL": zeropage
+CO:   .res 2
 
 .segment "CODE"
 .proc COD

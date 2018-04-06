@@ -1,11 +1,13 @@
 ;---------------------------------------------------------- 
 ; sekwencja inicjująca rozszerzenie Basica
 
-.segment "ZEROPAGE"
-YC:   .res 2
-XC:   .res 2
+.segment "ZEROPAGE":zeropage
+SRCPTR:   .res 2
+DSTPTR:   .res 2
 
 .segment "CODE"
+    .org $0801
+
     .word $080D       ;wskaźnik to następnej linii
     .word 1987        ;numer linii i jednocześnie rok powstania
     .byte $9E         ;SYS token
@@ -13,28 +15,28 @@ XC:   .res 2
     .word $0813       ;wskaźnik to następnej linii
     .word 2018        ;numer linii i jednocześnie rok powstania
     .byte $A2         ;NEW token
-    .byte $00         ;end of basic line
-    .word $0000       ;wskaźnik na następną linię, $0000 oznacza, że jest to ostania linia
+    .byte 0           ;end of basic line
+    .word 0           ;wskaźnik na następną linię, $0000 oznacza, że jest to ostania linia
 
-    lda #$00
-    ldy #$10
-    sta XC
-    sty XC+1
-    ldx #$90
-    sta YC
-    stx YC+1
-    tay
-:   lda (XC),y
-    sta (YC),y
+    lda #$09
+    sta SRCPTR+1
+    lda #$90
+    sta DSTPTR+1
+    ldy #0
+    sty SRCPTR
+    sty DSTPTR
+    ldx #16             ;16 bloków po 256 bajtów
+:   lda (SRCPTR),y
+    sta (DSTPTR),y
     dey
     bne :-
-    inc XC+1
-    inc YC+1
-    lda YC+1
-    cmp #$A0      ;kopiuje 4KB, od $9000 do $9FFF włącznie
+    inc SRCPTR+1
+    inc DSTPTR+1
+    dex
     bne :-
     jmp $9000     ;will init wpbasic and return to SYS(2069)
-    .res 1992,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
+
+    .res $0900-*,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
 
 .segment "BINARY"
     .incbin "wpbasic.bin"

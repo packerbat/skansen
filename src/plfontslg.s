@@ -2,10 +2,12 @@
 ; sekwencja kopiująca czcionki pod ROM BASIC-a
 
 .segment "ZEROPAGE"
-YC:   .res 2
-XC:   .res 2
+SRCPTR:   .res 2
+DSTPTR:   .res 2
 
 .segment "CODE"
+    .org $0801
+
     .word $080D       ;wskaźnik to następnej linii
     .word 1987        ;numer linii i jednocześnie rok powstania
     .byte $9E         ;SYS token
@@ -13,38 +15,41 @@ XC:   .res 2
     .word $0813       ;wskaźnik to następnej linii
     .word 2018        ;numer linii i jednocześnie rok powstania
     .byte $A2         ;NEW token
-    .byte $00         ;end of basic line
-    .word $0000       ;wskaźnik na następną linię, $0000 oznacza, że jest to ostania linia
+    .byte 0           ;end of basic line
+    .word 0           ;wskaźnik na następną linię, 0 oznacza, że jest to ostania linia
 
-    lda #$00
-    ldy #$10
-    sta XC
-    sty XC+1
-    ldx #$A0
-    sta YC
-    stx YC+1
-    tay
-:   lda (XC),y
-    sta (YC),y
+    lda #$09
+    sta SRCPTR+1
+    lda #$A0
+    sta DSTPTR+1
+    ldy #0
+    sty SRCPTR
+    sty DSTPTR
+    ldx #8             ;8 bloków po 256 bajtów
+:   lda (SRCPTR),y
+    sta (DSTPTR),y
     dey
     bne :-
-    inc XC+1
-    inc YC+1
-    lda YC+1
-    cmp #$A8      ;kopiuje 2KB, od $A000 do $A7FF włącznie
+    inc SRCPTR+1
+    inc DSTPTR+1
+    dex
     bne :-
     rts           ;return to SYS(2069)
-    .res 1994,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
+    .res $0900-*,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
 
 ;---------------------------------------------------------- 
 ; wzorce czcionek ładowane pod ROM BASIC-a
 ;    $A000-$A19F - chr$(33)-chr$(63), znaki interpunkcyjne i cyfry
 ;    $A1A0-$A367 - chr$(65)-chr$(95), małe litery
 ;    $A368-$A51F - chr$(65+128)-chr$(95+128), wielkie litery
-;    $A520-$A7FF - chr$(33+128)-chr$(63+128), polskie znaki
-; zerowe litery w każdym z 4 bloków to odstępy równe ODS*1 (myślnie 8 pikseli)
+;    $A520-$A6FF - chr$(33+128)-chr$(63+128), polskie znaki
+;    $A700-$A7FF - tablica częstotliwości nut
 
-.segment "ZICHAR"
+.segment "BINARY"
+    .org $0900
+
+;============== znaki interpunkcyjne i cyfry ==============
+
     .byte 4
     .dbyt %0011111111010000        ;"!"
     .dbyt %0011111111010000
@@ -170,9 +175,10 @@ XC:   .res 2
     .dbyt %0011111111010000        ;"?"
     .dbyt %0011111111010000
 
-    .res 259,0
+    .res $0AA0-*,0
 
-.segment "SMCHAR"
+;============== małe litery ==============
+
     .byte 16
     .dbyt %0000000011100000        ;"a"
     .dbyt %0000010111110000
@@ -329,9 +335,10 @@ XC:   .res 2
     .dbyt %0011111111010000        ;"{left}"
     .dbyt %0011111111010000
 
-    .res 237,0
+    .res $0C68-*,0
 
-.segment "LGCHAR"
+;============== wielkie litery ==============
+
     .byte 16
     .dbyt %0000111111110000        ;"A"
     .dbyt %0001111111110000
@@ -475,12 +482,9 @@ XC:   .res 2
     .dbyt %0000000000110000        ;" "
     .dbyt %0000000000110000
 
-    .res 217,0
+    .res $0E20-*,0
 
-.segment "PLCHAR"
-    .byte 4
-    .dbyt %0000000000110000        ;" "
-    .dbyt %0000000000110000
+;============== polskie litery ==============
 
     .byte 4
     .dbyt %0000000000110000        ;" "
@@ -602,5 +606,109 @@ XC:   .res 2
     .dbyt %0000000000110000        ;" "
     .dbyt %0000000000110000
 
-    .res 581,0
+    .byte 4
+    .dbyt %0000000000110000        ;" "
+    .dbyt %0000000000110000
 
+    .res $1000-*,0
+
+;============== wysokości nut ==============
+
+    .word 1*256+12
+    .word 1*256+28
+    .word 1*256+45
+    .word 1*256+62
+    .word 1*256+81
+    .word 1*256+102
+    .word 1*256+123
+    .word 1*256+145
+    .word 1*256+169
+    .word 1*256+195
+    .word 1*256+221
+    .word 1*256+250
+    .word 2*256+24
+    .word 2*256+56
+    .word 2*256+90
+    .word 2*256+124
+    .word 2*256+163
+    .word 2*256+204
+    .word 2*256+246
+    .word 3*256+35
+    .word 3*256+83
+    .word 3*256+134
+    .word 3*256+187
+    .word 3*256+244
+    .word 4*256+48
+    .word 4*256+112
+    .word 4*256+180
+    .word 4*256+251
+    .word 5*256+71
+    .word 5*256+152
+    .word 5*256+237
+    .word 6*256+71
+    .word 6*256+167
+    .word 7*256+12
+    .word 7*256+119
+    .word 7*256+233
+    .word 8*256+97
+    .word 8*256+225
+    .word 9*256+104
+    .word 9*256+247
+    .word 10*256+143
+    .word 11*256+48
+    .word 11*256+218
+    .word 12*256+143
+    .word 13*256+78
+    .word 14*256+24
+    .word 14*256+239
+    .word 15*256+210
+    .word 16*256+195
+    .word 17*256+195
+    .word 18*256+209
+    .word 19*256+239
+    .word 21*256+31
+    .word 22*256+96
+    .word 23*256+181
+    .word 25*256+30
+    .word 26*256+156
+    .word 28*256+49
+    .word 29*256+223
+    .word 31*256+165
+    .word 33*256+135
+    .word 35*256+134
+    .word 37*256+162
+    .word 39*256+223
+    .word 42*256+62
+    .word 44*256+193
+    .word 47*256+107
+    .word 50*256+60
+    .word 53*256+57
+    .word 56*256+99
+    .word 59*256+190
+    .word 63*256+75
+    .word 67*256+15
+    .word 71*256+12
+    .word 75*256+69
+    .word 79*256+191
+    .word 84*256+125
+    .word 89*256+131
+    .word 94*256+214
+    .word 100*256+121
+    .word 106*256+115
+    .word 112*256+199
+    .word 119*256+124
+    .word 126*256+151
+    .word 134*256+30
+    .word 142*256+24
+    .word 150*256+139
+    .word 159*256+126
+    .word 168*256+250
+    .word 179*256+6
+    .word 189*256+172
+    .word 200*256+143
+    .word 212*256+230
+    .word 225*256+143
+    .word 238*256+248
+    .word 253*256+46
+
+    .res $1100-*,0

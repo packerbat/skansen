@@ -11,7 +11,7 @@
 ;    ODS - domyślny odstęp (1 piksel)
 
 .export LETT
-.import CZEK, POT, FND, SX, DX:zeropage, DY:zeropage, XC:zeropage, YC:zeropage, KY:zeropage, PM:zeropage
+.import CZEK, POT, FND, SX, DX:zeropage, DY:zeropage, XC, YC, KY:zeropage, PM:zeropage
 
 .segment "CODE"
 .proc LETT

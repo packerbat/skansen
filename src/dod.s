@@ -5,7 +5,7 @@
 ;    XC, YC - nowe położenie
 
 .export DOD
-.import KX:zeropage, KY:zeropage, XC:zeropage, YC:zeropage
+.import KX:zeropage, KY:zeropage, XC, YC
 
 .segment "CODE"
 .proc DOD

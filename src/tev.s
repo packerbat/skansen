@@ -3,11 +3,11 @@
 ; zmienia: wszystko
 
 .export TEV
-.import FnSCROLL, FnTEXT
+.import FnSCROLL, FnTEXT, FnPLAY
 
 .segment "CODE"
 .proc TEV
-    lda #$00
+    lda #0
     sta $0D         ;Data type Flag, $00 = Numeric, $FF = String
     jsr $0073       ;CHRGET: Get next Byte of BASIC Text
     php
@@ -33,5 +33,4 @@
 
 .segment "RODATA"
 FN2 = 2
-FN4 = 4
-FNVEC: .word FnTEXT-1, FN2-1, FnSCROLL-1, FN4-1
+FNVEC: .word FnTEXT-1, FN2-1, FnSCROLL-1, FnPLAY-1

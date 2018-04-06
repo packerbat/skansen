@@ -1,6 +1,6 @@
 ;------------------------------------
 ; Zamienia cyfry ASCII ('0'..'9') na liczbę 8-bitową
-; jeśli nie ma żadnej cyfry to DX=0
+; jeśli nie ma żadnej cyfry albo wszystkie cyfry to zera to DX=0
 ;
 ; input:
 ;    Y - numer poprzedniej litery
@@ -18,7 +18,7 @@
 
 .segment "CODE"
 .proc NUM
-    lda #$00
+    lda #0
     sta DX
 :   jsr GETL
     bcs :+      ;zwykła litera lub koniec stringu

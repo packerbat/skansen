@@ -21,8 +21,8 @@
     beq :++
     cmp #$cd
     bcc :+          ;$01..$CC - nie moje
-    cmp #$e5
-    bcs :+          ;$e5..$ff - nie moje
+    cmp #$e6
+    bcs :+          ;$e6..$ff - nie moje
 
     plp
     sec

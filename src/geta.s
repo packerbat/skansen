@@ -5,8 +5,10 @@
 ; output:
 ;    PTYP - zmieniony jeśli wystąpił
 
-.export GETA
-.export PTYP
+.export GETA, PTYP
+
+.segment "DATA"
+PTYP:    .byte 1
 
 .segment "CODE"
 .proc GETA
@@ -16,5 +18,3 @@
     rts
 .endproc
 
-.segment "BSS"
-PTYP:    .res 1
