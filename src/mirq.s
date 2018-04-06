@@ -11,24 +11,38 @@
 ;   00000000 ???????? oznacza koniec utworu
 ;   00000001 tttttttt oznacza pauze o długości tttttttt jednostek czasu
 ;   0nnnnnnn tttttttt oznacza nutę o wysokości nnnnnnn i długości tttttttt jednostek czasu
+;
+; Procedura przerwania modyfikuje 3 struktury o polach:
+;   DEL-długość nuty, WY-czas wyłączenia nuty, AN-adres nuty, VOC-rejestr kontrolny, VGT-tempo/aktywność
+; Oprócz tego jest jedna zmienna w STPLAY, w której bit 0 ustawiony na 1 rozpoczyna odtwarzanie muzyki
+;
+; najpierw sprawdzany jest jiffy clock $A2/$A1 z WY/WY+1 i jeśli zegar jest mniejszy to nic się nie dzieje
+; (ponieważ na czątku WY=0 więc ten warunek jest prawie zawsze spełniony)
+; jeśli zegra jest większy równy to
+;    jeśli dźwięk był włączony to trzeba wyliczyć nową wartość WY jako VGT*1 i skończyć działanie bez przesuwania się do nowej nuty
+;    teraz trzeba pobrać nową nutę i:
+;        jeśli nuta to rozkaz zmiany rejestru to jest on wykonywany natychmiast a potem jest brana następna nuta
+;        jeśli nuta to pauza to wyliczana jest nowa wartość WY jako VGT*DEL i kończy się działanie
+;        jeśli jest to nuta to włączany jest dźwięk i wyliczana nowa wartość WY jako VGT*(DEL-1) i kończy się działanie
+
 
 .export MIRQ
 .import STPLAY, VGT, WY, VOC, DEL, AN, PM:zeropage
 
 .segment "CODE"
-; procedyra mnoży VGT(g) (młodsze 7 bitów to tempo) przez DEL(g)-1 (czas trwania nuty)
+; procedyra mnoży VGT(g) (młodsze 7 bitów to tempo) przez DEL(g) (czas trwania nuty)
 ; X = adres struktury generatora g*7
 ; Wynik w WY(g), potem zostanie do tego dodana aktualna wartość zegra jiffy clock
 ; niszczy DEL(g) (zawsze 0)
 .proc MNO
     lda #0
     sta PM+1
-    sta WY,x        ;czemu nie ma "sta WY+1,x"?
+    sta WY,x
+    sta WY+1,x
     lda VGT,x
     and #$7F
     sta PM          ;PM = VGT(g) (młodsze 7 bitów)
     ldy #8          ;licznik pętli 8 razy
-    dec DEL,x
 :   lsr DEL,x
     bcc :+
     clc
@@ -49,24 +63,20 @@
     ldx #14         ;zaczynamy od generatora 3
 L26:
     lda VGT,x       ;VGT(g) = 0 oznacza, że generator jest wyłączony
-    beq E16
+    beq nastepny_generator
     lda $A2         ;najmłoszy jiffy clock
     cmp WY,x
     lda $A1         ;średni jiffy clock
     sbc WY+1
-    bcc E16
-    lda VGT,x       ;czas przekroczony więc zmieniam nutę
-    and #$7F
-    sta WY,x
-    lda #0
-    sta WY+1,x      ;do WY wstawiam VGT (młodsze 7 bitów) czyli tempo
+    bcc nastepny_generator
+
     lda VOC,x
     lsr
-    bcs E18         ;czy nuta była włączona
+    bcs obsluga_nuty_wlaczonej
 
-    lda AN+1,x      ;nie, nuta była wyłączona
+nastepna_nuta:
+    lda AN+1,x      ;jest cisza więc czas na nową nutę
     sta PM+1
-E17:
     lda AN,x
     sta PM          ;PM =AN(g)
     ldy #1
@@ -83,21 +93,23 @@ E17:
     sec             ;nuta+0 jest w zakresie 1..126, czyli jest to wysokość nuty albo pauza
     sbc #1
     beq obsluga_pauzy   ;nuta+0 = 1 to pauza a nuta+1 to czas pauzy, który trzeba przemnożyć przez VGT
-    asl
+
+    asl             ;to jest nowa nuta do zagrania
     tay
     lda $A700,y     ;W $A700 jest tablica częstotliwości nut
     sta $D400,x
     lda $A701,y
     sta $D401,x
+    dec DEL,x
     jsr MNO         ;wyznaczam czas następnego przełączenia
 
-E18:
+zaneguj_gate:
     lda VOC,x       ;tak, nuta była włączona więc zmieniam GATE na przeciwny czyli wyłączam, WY jest już ustawione na 1 impuls VGT
     eor #1
     sta VOC,x
     sta $D404,x
 
-E77:
+dodaj_jiffy_clock:
     clc
     lda WY,x
     adc $A2
@@ -106,7 +118,7 @@ E77:
     adc $A1
     sta WY+1,x      ;WY(g) = VGT(g) * (DEL(g)-1) + jiffy clock
 
-E16:
+nastepny_generator:
     txa             ;przesuwamy się do generatora wcześniejszego
     sec
     sbc #7
@@ -115,23 +127,28 @@ E16:
     lda VGT
     ora VGT+7
     ora VGT+14
-    bne :+
-    lda STPLAY      ;zamilkły wszystkie 3 głosy więc koniec grania
-    and #$FE
-    sta STPLAY
-:   rts
+    sta STPLAY      ;jesli wszystkie 3 VGT będą 0 to STPLAY też będzie 0
+    rts
 
-obsluga_pauzy:
-    inc DEL         ;obsługa pauzy, nie ma 1/60 ciszy po pauzie
-    jsr MNO         ;wyznaczam czas następnego przełączenia
-    jmp E77
+
+obsluga_nuty_wlaczonej:
+    lda VGT,x       ;czas przekroczony więc zmieniam nutę, przygotowuję 1/60 odstępu między nutami
+    and #$7F
+    sta WY,x
+    lda #0
+    sta WY+1,x      ;do WY wstawiam VGT (młodsze 7 bitów) czyli tempo
+    jmp zaneguj_gate
 
 koniec_sciezki:
     sta AN,x        ;A = 0 oznacza koniec ścieżki, a AN(g)=0 oznacza ustaw się na początku ścieżki
     ldy VGT,x
-    bmi E16         ;najstarszy bit ustawiony oznacza graj na okrągło
+    bmi nastepny_generator         ;najstarszy bit ustawiony oznacza graj na okrągło
     sta VGT,x       ;VGT(g)=0 oznacza "wyłącz głos"
-    bpl E16         ;ten skok wykona się zawsze bo STA nie zmienia flag
+    jmp nastepny_generator
+
+obsluga_pauzy:
+    jsr MNO         ;wyznaczam czas następnego przełączenia
+    jmp dodaj_jiffy_clock
 
 komenda_sterujaca:
     and #$7F        ;wysokość nuty ma bit 8 = 1, czyli to jest komenda, dolne 7 bitów to numer rejestru a następny bajt to wartość rejestru. jeśli dolne 7 bitów to same jedynki to nie jest to numer rejestru tylko rejestr VOC
@@ -149,7 +166,7 @@ komenda_sterujaca:
     adc PM          ;mam adres relatywny do głosu
 :   tay             ;y = dolne 7 bitów nuta+0
     lda DEL,x       ;nuta+1 to nowa wartość rejestru
-    sta $D400,y     ;Frequency Control - Low-Byte. Czy to czasami wali w próżnię?
-:   jmp E17         ;wykonanie komendy oznacza dalsze szukanie nuty do zagrania
+    sta $D400,y           ;Frequency Control - Low-Byte. Czy to czasami wali w próżnię?
+:   jmp nastepna_nuta     ;wykonanie komendy oznacza dalsze szukanie nuty do zagrania
 .endproc
 

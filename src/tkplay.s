@@ -35,13 +35,12 @@ VGT3:  .byte 0
 
 .segment "CODE"
 .proc TkPLAY
-    jsr $E209       ;Check Default Parameters
+    jsr $E209       ;Check Default Parameters, play bez parametrów nic nie robi
     cmp #$90        ;token STOP
     beq MSTO
 
-:   lda STPLAY
-    bmi :-          ;czekam aż się zwolni semafor
-    ldx #0
+    ldx STPLAY
+    bne koniec_PLAY   ;nie uruchamiam bo trwa
     stx WOL
     cmp #$9A        ;token CONT
     bne :+
@@ -51,7 +50,7 @@ VGT3:  .byte 0
 :   jsr $B79E       ;Evaluate Text to 1 Byte in XR
     txa
     ora WOL
-    sta WOL         ;WOL jest pierwszym parametrem z ustawionym najstarszym bitem albo nie
+    sta WOL         ;WOL jest wspólnym tempem z ustawionym najstarszym bitem albo nie
     lda #15
     sta $D418       ;Master Volume na maksa
     lda #0
@@ -83,22 +82,21 @@ E78:
     bcc :-
 
 koniec_PLAY:
-    lda STPLAY
-    ora #1
-    sta STPLAY      ;to rozpocznie granie
+    lda VGT         ;jeśli wszystkie 3 głosy zostały wyłączone to wyłączam przerwanie
+    ora VGT+7
+    ora VGT+14
+    sta STPLAY      ;jesli wszystkie 3 VGT będą 0 to STPLAY też będzie 0
     rts
 
 MSTO:               ;PLAY STOP 1,2,3 - wyłączy jednocześnie trzy generatory
-:   lda STPLAY
-    bmi :-          ;czekam aż się zwolni semafor
     jsr $0073
-    jsr $E209       ;Check Default Parameters, break if none
+    beq E40         ;po STOP nic nie ma więc zgłaszam błąd
 :   jsr $B79E       ;Evaluate Text to 1 Byte in XR
     dex             ;numeracja od 1 więc dekrement
-    txa
-    sta $02
     cmp #3
     bcs E40         ;czyli gdy 4 i więcej
+    txa
+    sta $02
     asl $02
     adc $02
     asl $02
@@ -109,10 +107,11 @@ MSTO:               ;PLAY STOP 1,2,3 - wyłączy jednocześnie trzy generatory
     lda VOC,x
     and #$FE
     sta $D404,x     ;Control Register(g) = VOC(g) & 11111110 - start release
-    jsr $E206       ;Check Default Parameters, kończy gdy nie więcej treści
+    jsr $0079       ;ponowne pobranie bajta z treści programu
+    beq koniec_PLAY ;instrukcja się skończyła
     jsr $E20E       ;Check For Comma
     bne :-
-    rts
+    beq koniec_PLAY
 
 E40:
     jmp $B248       ;?ILLEGAL QUANTITY

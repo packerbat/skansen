@@ -19,12 +19,7 @@
 
     lda STPLAY      ;STPLAY=0 muzyka wyłączona
     beq :+
-    ora #$80
-    sta STPLAY      ;najstarszy bit w STPLAY jest semaforem
     jsr MIRQ
-    lda STPLAY
-    and #$7F
-    sta STPLAY
 
 :   ;jsr SIRQ
 
