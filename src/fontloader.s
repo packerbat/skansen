@@ -1,7 +1,7 @@
 ;---------------------------------------------------------- 
-; sekwencja inicjująca rozszerzenie Basica
+; sekwencja kopiująca czcionki pod ROM BASIC-a
 
-.segment "ZEROPAGE":zeropage
+.segment "ZEROPAGE"
 SRCPTR:   .res 2
 DSTPTR:   .res 2
 
@@ -16,16 +16,16 @@ DSTPTR:   .res 2
     .word 2018        ;numer linii i jednocześnie rok powstania
     .byte $A2         ;NEW token
     .byte 0           ;end of basic line
-    .word 0           ;wskaźnik na następną linię, $0000 oznacza, że jest to ostania linia
+    .word 0           ;wskaźnik na następną linię, 0 oznacza, że jest to ostania linia
 
     lda #$09
     sta SRCPTR+1
-    lda #$90
+    lda #$A0
     sta DSTPTR+1
     ldy #0
     sty SRCPTR
     sty DSTPTR
-    ldx #16             ;16 bloków po 256 bajtów
+    ldx #8             ;8 bloków po 256 bajtów
 :   lda (SRCPTR),y
     sta (DSTPTR),y
     dey
@@ -34,10 +34,8 @@ DSTPTR:   .res 2
     inc DSTPTR+1
     dex
     bne :-
-    jmp $9000     ;will init wpbasic and return to SYS(2069)
-
+    rts           ;return to SYS(2069)
     .res $08FE-*,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
 
 .segment "BINARY"
-    .incbin "wpbasic.prg"
-
+    .incbin "plfontslg.prg"

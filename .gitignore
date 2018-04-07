@@ -38,6 +38,7 @@
 *.prg
 *.bin
 *.d64
+*.seq
 
 # Debug files
 *.dSYM/

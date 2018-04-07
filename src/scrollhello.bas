@@ -3,5 +3,8 @@
 30 cls
 40 draw @31,174,dram$
 50 scroll cont "Hello! Hello! Hello!  ",2,2
-60 pause
-70 nrm
+60 print scroll
+70 pause 5*60
+80 scroll stop
+90 print scroll
+100 nrm

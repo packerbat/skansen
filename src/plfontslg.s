@@ -1,42 +1,6 @@
 ;---------------------------------------------------------- 
 ; sekwencja kopiująca czcionki pod ROM BASIC-a
 
-.segment "ZEROPAGE"
-SRCPTR:   .res 2
-DSTPTR:   .res 2
-
-.segment "CODE"
-    .org $0801
-
-    .word $080D       ;wskaźnik to następnej linii
-    .word 1987        ;numer linii i jednocześnie rok powstania
-    .byte $9E         ;SYS token
-    .asciiz "(2069)"  ;SYS argument
-    .word $0813       ;wskaźnik to następnej linii
-    .word 2018        ;numer linii i jednocześnie rok powstania
-    .byte $A2         ;NEW token
-    .byte 0           ;end of basic line
-    .word 0           ;wskaźnik na następną linię, 0 oznacza, że jest to ostania linia
-
-    lda #$09
-    sta SRCPTR+1
-    lda #$A0
-    sta DSTPTR+1
-    ldy #0
-    sty SRCPTR
-    sty DSTPTR
-    ldx #8             ;8 bloków po 256 bajtów
-:   lda (SRCPTR),y
-    sta (DSTPTR),y
-    dey
-    bne :-
-    inc SRCPTR+1
-    inc DSTPTR+1
-    dex
-    bne :-
-    rts           ;return to SYS(2069)
-    .res $0900-*,0   ;wypełnienie zerami reszty segmentu, co za marnotrawstwo
-
 ;---------------------------------------------------------- 
 ; wzorce czcionek ładowane pod ROM BASIC-a
 ;    $A000-$A19F - chr$(33)-chr$(63), znaki interpunkcyjne i cyfry
@@ -46,7 +10,7 @@ DSTPTR:   .res 2
 ;    $A700-$A7FF - tablica częstotliwości nut
 
 .segment "BINARY"
-    .org $0900
+    .org $A000
 
 ;============== znaki interpunkcyjne i cyfry ==============
 
@@ -175,7 +139,7 @@ DSTPTR:   .res 2
     .dbyt %0011111111010000        ;"?"
     .dbyt %0011111111010000
 
-    .res $0AA0-*,0
+    .res $A1A0-*,0
 
 ;============== małe litery ==============
 
@@ -335,7 +299,7 @@ DSTPTR:   .res 2
     .dbyt %0011111111010000        ;"{left}"
     .dbyt %0011111111010000
 
-    .res $0C68-*,0
+    .res $A368-*,0
 
 ;============== wielkie litery ==============
 
@@ -482,7 +446,7 @@ DSTPTR:   .res 2
     .dbyt %0000000000110000        ;" "
     .dbyt %0000000000110000
 
-    .res $0E20-*,0
+    .res $A520-*,0
 
 ;============== polskie litery ==============
 
@@ -610,7 +574,7 @@ DSTPTR:   .res 2
     .dbyt %0000000000110000        ;" "
     .dbyt %0000000000110000
 
-    .res $1000-*,0
+    .res $A700-*,0
 
 ;============== wysokości nut ==============
 
@@ -711,4 +675,4 @@ DSTPTR:   .res 2
     .word 238*256+248
     .word 253*256+46
 
-    .res $1100-*,0
+    .res $A800-*,0

@@ -1,4 +1,4 @@
-TARGETS = wpbasic.bin plfontslg.prg skansen.d64
+TARGETS = wpbasic.prg plfontslg.prg bootloader.prg fontloader.prg skansen.d64
 OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o \
        tknew.o tkink.o tkhgr.o tknrm.o tkcolour.o tkpause.o tkcls.o tkbasic.o tksei.o tkcli.o tkvolume.o \
        fnscroll.o getl.o num.o fnd.o gett.o lett.o geta.o cxy.o xyc.o pot.o czek.o tktext.o \
@@ -11,18 +11,21 @@ OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o \
 
 all: $(TARGETS)
 
-skansen.d64: wpbasic.prg plfontslg.prg
+skansen.d64: wpbasic.prg fontloader.prg plfontslg.prg
 	rm -f skansen.d65
-	c1541 -format diskname,id d64 skansen.d64 -attach skansen.d64 -write wpbasic.prg wpbasic -write plfontslg.prg plfontslg
+	c1541 -format diskname,id d64 skansen.d64 -attach skansen.d64 -write bootloader.prg bootloader -write wpbasic.prg wpbasic -write fontloader.prg fontloader -write plfontslg.prg "plfontslg"
 
-plfontslg.prg: plfontslg.o
-	ld65 -v -Ln plfontslg.lbl -C plfontslg.cfg -o $@ plfontslg.o c64.lib
+fontloader.prg: fontloader.o plfontslg.prg
+	ld65 -v -Ln fontloader.lbl -C fontloader.cfg -o $@ fontloader.o c64.lib
 
-wpbasic.prg: bootloader.o wpbasic.bin
+bootloader.prg: bootloader.o wpbasic.prg
 	ld65 -v -Ln bootloader.lbl -C bootloader.cfg -o $@ bootloader.o c64.lib
 
-wpbasic.bin: init.o wpbasic.lib
-	ld65 -v -Ln wpbasic.lbl -C skansen.cfg -o $@ init.o wpbasic.lib c64.lib
+wpbasic.prg: init.o wpbasic.lib
+	ld65 -v -Ln wpbasic.lbl -C wpbasic.cfg -o $@ init.o wpbasic.lib c64.lib
+
+plfontslg.prg: plfontslg.o
+	ld65 -v -C plfontslg.cfg -o $@ plfontslg.o c64.lib
 
 wpbasic.lib: $(OBJS)
 	rm -f wpbasic.lib
@@ -32,4 +35,4 @@ wpbasic.lib: $(OBJS)
 	ca65 -t c64 -v -g -o $@ $<
 
 clean:
-	rm -f *.o *.lib *.prg *.lbl *.d64 *.bin
+	rm -f *.o *.lib *.prg *.lbl *.d64 *.bin *.seq

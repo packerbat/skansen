@@ -5,11 +5,14 @@
 Niestety nie pamiętam, dlaczego to rozszerzenie BASIC-a nazywa się WORDPROCESSOR BASIC, ale tak
 go nazwałem i na razie zachowuję tę nazwę. Program ładujemy standardową procedurą:
 
-    LOAD "WPBASIC",8
+    LOAD "BOOTLOADER",8
 
 a po załadowaniu, uruchamiamy poleceniem:
 
     RUN
+
+W trakcie inicjowania rozszerzenia BASIC-a zostanie automatycznie załadowana czcionka o nazwie
+PLFONTSLG.PRG.
 
 ## Nowe komendy BASIC-a
 
@@ -255,21 +258,20 @@ z parametrem *delay* = 2 będzie wynosił 14/60 sekundy. Ostatni opcjonalny para
 jedną z 3 wartości: 0 - wartość piksela będzie 0, 1 - wartość piksela będzie 1, 2 - wartość piksela zostanie
 zanegowana.
 
-Jednak, żeby napis się pojawił trzeba wcześniej załadować czcionki. Definicje czcionek muszą zostać
-załadowane do pamięci komputera w formie czterech tablic po 31 znaków:
+WORDPROCESSOR BASIC ładuje na starcie czcionkę w odpowiednie miejsca pamięci pod BASIC ROM. W obecnej wersji
+programu czcionki mają zadeklarowane cztery statyczne tablice po 31 znaków:
 
 * $A000-$A19F - chr$(33)-chr$(63), znaki interpunkcyjne i cyfry
 * $A1A0-$A367 - chr$(65)-chr$(95), małe litery
 * $A368-$A51F - chr$(95)-chr$(127), wielkie litery
 * $A520-$A6FF - chr$(161)-chr$(191), polskie znaki
 
-W źródłach WORDPROCESSOR BASIC znajduje się przykładowa czcionka o nazwie PLFONTSLG.PRG. Ta
-czcionka ma specjalny mikroprogram ładujący czcionkę do obszaru $A000-$A7FF. Czcionkę trzeba
-załadować poleceniem:
+W źródłach WORDPROCESSOR BASIC znajduje się przykładowa czcionka o nazwie PLFONTSLG.PRG. Oprócz tego
+znajduje się program FONTLOADER.PRG, który ładuje czcionkę do odpowiedniego obszaru pamięci:
 
-    LOAD "PLFONTSLG",8
+    LOAD "FONTLOADER",8
 
-a następnie uruchomić poleceniem `RUN`.
+Potem trzeba wydać polecenie `RUN`.
 
 UWAGA: Czcionka oprócz definicji liter zawiera również tabelę częstotliwości nut potrzebną do odtwarzania
 muzyki. Tabela składa się z liczb 16-bitowych, które są podzielnikami zegara 1MHz w układzie SID. Tabela
