@@ -3,15 +3,13 @@
 ; zmienia: wszystko
 
 .export FnSCROLL
+.import NGAT
 
 .segment "CODE"
 .proc FnSCROLL
     lda NGAT
     beq :+
     lda #$ff
-:   jsr $BC3C       ;Evaluate <sgn>, to jest jakaś pomyłka
+:   jsr $BC3C       ;convert A to FCC#1
     rts
 .endproc
-
-.segment "BSS"
-NGAT:   .res 1

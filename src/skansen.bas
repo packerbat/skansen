@@ -7,10 +7,9 @@
 1020 draw @31,174,dram$
 1025 voice "10f620,10f620,10f620"
 1026 play 1,1,2,3
-1030 pause
-1040 nrm
+1030 scroll cont "Hello! Hello! Hello!  ",2,2
 
-20000 end
+20000 pause:nrm:end
 29999 rem ----init music----
 30000 a$="a448gc5d524ge548d524ge548cda4g"
 30010 a$=a$+"a448gc5d524ge548d524ge548cda4g"

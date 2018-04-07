@@ -4,7 +4,7 @@
 ; oraz wiem, że nie było to przerwanie spowodowane instrukcją BRK
 
 .export IRQ
-.import MIRQ, STPLAY, PM:zeropage
+.import MIRQ, NIRQ, STPLAY, NGAT, CONT, PM:zeropage
 
 .segment "CODE"
 .proc IRQ
@@ -23,11 +23,15 @@
 
 :   ;jsr SIRQ
 
+    lda NGAT        ;NGAT=0 nie ma przewijanego napisu
+    beq :+
+    dec CONT
+    bne :+
     lda #$34        ;wyłącza i BASIC i KERNAL
     sta $01
-    ;jsr NIRQ
+    jsr NIRQ
 
-    pla
+:   pla
     sta PM+1
     pla
     sta PM

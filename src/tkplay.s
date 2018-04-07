@@ -63,7 +63,7 @@ VGT3:  .byte 0
     and #$0F
     beq E78
     clc
-    adc #$C0
+    adc #$B0
     sta AN+1,x
     lda WOL
     sta VGT,x       ;VGT to pierwszy parametr z ustawionym najstarszym bitem albo nie

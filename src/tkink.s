@@ -31,5 +31,5 @@
     rts
 .endproc
 
-.segment "BSS"
-HICOLOR:    .res 1
+.segment "DATA"
+HICOLOR:    .byte $10

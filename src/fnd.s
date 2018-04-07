@@ -17,7 +17,7 @@
 ;    Z - 1=znak już został namalowany, 0=trzeba malować znak w PM
 ;    Y - ma wartość 0 gdy litera znaleziona
 
-.export FND
+.export FND, FNDS
 .export DX, DY, PM
 .import KY:zeropage, ODS, NUM, SX
 
@@ -38,7 +38,18 @@ PM:   .res 2
     cmp #29        ;reverse "]", move cursor right
     beq SPC
     ldx ODS
-FNDS:
+    jmp FNDS
+
+SPC:            ;rysowanie spacji o podanej ilości pikseli
+    ldy KY      ;numer bieżącej litery
+    jsr NUM     ;pobiera parametr całkowity (8bit) do DX
+    dey
+    sty KY      ;Y cofa się do znaku ostatniej cyfry 0..9
+    lda #0      ;Z=1 oznacza koniec malowania
+    rts
+.endproc
+
+.proc FNDS      ;ta procedura nigdy nie napotka na znak 29 {CRSR RIGHT}
     stx DX
     lsr
     lsr
@@ -54,13 +65,13 @@ FNDS:
     tya             ;A = znak
     and #$1F        ;dolne 5 bitów
     beq :++++
-    ldy #$00        ;adres w tablicy
+    ldy #0          ;adres w tablicy
     tax             ;numer litery w tablicy
 :   dex
     beq :+
     lda (PM),y      ;pierszy bajt to chyba ilość bajtów zajętych przez literę
     clc             ;teraz PM trzeba zwiększyć o długość litery + 1
-    adc #$01
+    adc #1
     adc PM
     sta PM
     bcc :-
@@ -77,15 +88,6 @@ FNDS:
     clc
     adc DX
     sta DX
-    lda #$00        ;odstęp z ODS (domyślnie 1) jest mnożony przez 8 i Z=1 kończy rysowanie
-    rts
-
-SPC:            ;rysowanie spacji o podanej ilości pikseli
-    ldy KY      ;numer bieżącej litery
-    jsr NUM     ;pobiera parametr całkowity (8bit) do DX
-    dey
-    sty KY      ;Y cofa się do znaku ostatniej cyfry 0..9
-    lda #$00    ;Z=1 oznacza koniec malowania
+    lda #0        ;odstęp z ODS (domyślnie 1) jest mnożony przez 8 i Z=1 kończy rysowanie
     rts
 .endproc
-

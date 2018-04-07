@@ -6,7 +6,8 @@ OBJS = nrm.o hgr.o wait.o nstop.o nor.o token.o list.o doit.o tev.o \
        getd.o orot.o dod.o tkdraw.o tkfill.o \
        cod.o fntext.o fnplay.o \
        nuta.o hex.o getn.o tkmusic.o \
-       tkplay.o tkvoice.o mirq.o irq.o
+       tkplay.o tkvoice.o mirq.o nirq.o irq.o \
+       gets.o nxlt.o tkscroll.o
 
 all: $(TARGETS)
 

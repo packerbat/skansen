@@ -25,7 +25,7 @@
     jsr $E254       ;Get Parameters For OPEN/CLOSE, używa PM
     pla
     clc
-    adc #$C0
+    adc #$B0
     sta PM+1
     lda #0
     tay
