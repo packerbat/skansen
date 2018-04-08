@@ -25,7 +25,9 @@ SDX:    .byte 1
     sta NGAT        ;nie było najstarszego bita więc NGAT=0 czyli koniec przewijania
     rts
 
-:   cmp #29         ;{CRSR RIGHT}
+:   ldy #0
+    sty SAD+1       ;to oznacza, że litera jest narysowana
+    cmp #29         ;{CRSR RIGHT}
     bne :+
     inc KOL
     lda $B001,x     ;w A jest odstęp w pikselach
@@ -33,10 +35,11 @@ SDX:    .byte 1
     jmp :+++
 
 :   ldx SODS
-    tay
+    tay             ;potrzebuję A
     lda DX          ;zachowaj DX
     pha
-    jsr FNDS        ;ustawia DX i PM, wymaga Y-numer litery, X-odstęp po literze
+    tya
+    jsr FNDS        ;ustawia DX i PM, wymaga A-numer litery, X-odstęp po literze
     beq :+
     lda PM
     sta SAD         ;SAD wkaźnik na wzorzec litery

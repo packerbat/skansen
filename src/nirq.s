@@ -7,7 +7,10 @@
 ; NGAT - dolne 7 bitów to prędkość przewijania w 1/60 sekundy, domyślnie 1
 ; SAD - adres rysowanej litery
 ; POS - numer kolumny rysowanej litery
-; SDX - liczba wolnych pikseli za literą
+; SDX - licznik ilości wolnych kolumn za literą
+; CONT - licznik szybkości
+; SSX - szerokość lite, domyślnie 1 czyli litery nie poszerzone
+; SSX+1 - licznik poszerzania
 
 
 .export NIRQ
@@ -33,10 +36,11 @@
 :   inx
     bne  :---
 
+    lda SAD+1
+    beq DOSP        ;litera jest już namalowana, teraz tylko odstęp
+    sta PM+1
     lda SAD
     sta PM
-    lda SAD+1
-    sta PM+1
     lda POS
     ldy #0
     cmp (PM),y      ;porównuje rysowany X litery z szerokością litery

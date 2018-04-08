@@ -25,7 +25,7 @@
 
     lda NGAT        ;NGAT=0 nie ma przewijanego napisu
     beq :+
-    dec CONT
+    dec CONT        ;CONT jest zainicjowane na 1 przez GETS
     bne :+
     lda #$34        ;wyłącza i BASIC i KERNAL
     sta $01

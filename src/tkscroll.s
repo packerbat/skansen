@@ -1,7 +1,7 @@
 ;------------------------------------
 ; obsługa tokena SCROLL przesuwającego napis
 ; Skrolowany napis znajduje się w $B000-$B0FF
-; pobiera parametry: YK, YK+1, XK, XK+1, HICOLOR
+; pobiera parametry: SCROLL [CONT] "text"[, SSX=1[, SODX=1[, WOL=1]]]
 ;
 ; używa $02
 ;
@@ -14,10 +14,10 @@
 .import GETS, NUM, NXLT, WOL, SSX, DX:zeropage
 
 .segment "DATA"
-NGAT:  .byte 1
+NGAT:  .byte 1       ;predkość przewijania, znacznik zawinięcia, odblokowanie przerwania NIRQ
 KOL:   .byte 1       ;numer rysowanej litery
 SAD:   .word 0       ;wskaźnik na rysowaną literę
-POS:   .byte 0
+POS:   .byte 0       ;numer kolumny
 
 .segment "CODE"
 .proc TkSCROLL

@@ -10,8 +10,8 @@
 .import WOL
 
 .segment "DATA"
-CONT:  .byte 1
-SODS:  .byte 1
+CONT:  .byte 1       ;licznik szybkości przewijania (1=co impuls 1/60 sek.)
+SODS:  .byte 1       ;odstęp za literą
 SSX:   .byte 1,0     ;skala napisu i licznik powtórzeń tej samej kolumny
 
 .segment "CODE"
@@ -39,6 +39,6 @@ SSX:   .byte 1,0     ;skala napisu i licznik powtórzeń tej samej kolumny
     sta WOL
     txa
     ora WOL
-    sta WOL
+    sta WOL         ;WOL zostanie przepisane do NGAT żeby uruchomić animację
     rts
 .endproc

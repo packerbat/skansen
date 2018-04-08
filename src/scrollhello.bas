@@ -2,9 +2,9 @@
 20 hgr 0,15
 30 cls
 40 draw @31,174,dram$
-50 scroll cont "Hello! Hello! Hello!  ",2,2
+50 scroll cont "Hello! Hello! Hello!             ",2,2
 60 print scroll
-70 pause 5*60
+70 pause
 80 scroll stop
 90 print scroll
 100 nrm
