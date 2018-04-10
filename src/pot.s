@@ -4,7 +4,7 @@
 ; kolor trzeba ustawić przed lub po narysowaniu za pomocą FILL
 ; 
 
-.export POT
+.export POT, TBP
 .import XC, YC, PTYP, HICOLOR
 
 .segment "FPAC1": zeropage

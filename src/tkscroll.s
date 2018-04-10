@@ -10,14 +10,14 @@
 ; output:
 ;
 
-.export TkSCROLL, NGAT, KOL, SAD, POS
+.export TkSCROLL, NGAT, KOL
 .import GETS, NUM, NXLT, WOL, SSX, DX:zeropage
 
 .segment "DATA"
-NGAT:  .byte 1       ;predkość przewijania, znacznik zawinięcia, odblokowanie przerwania NIRQ
-KOL:   .byte 1       ;numer rysowanej litery
-SAD:   .word 0       ;wskaźnik na rysowaną literę
-POS:   .byte 0       ;numer kolumny
+NGAT:  .byte 0       ;predkość przewijania, znacznik zawinięcia, odblokowanie przerwania NIRQ
+
+.segment "BSS"
+KOL:   .res 1       ;numer rysowanej litery
 
 .segment "CODE"
 .proc TkSCROLL

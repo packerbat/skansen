@@ -5,7 +5,7 @@
 
 .segment "CODE"
     ldx #$00
-    ldy #$90
+    ldy #$8C
     clc
     jsr $fe25       ;Read / Set Top of Memory, zachowuje A,X,Y
     stx $37         ;Pointer: Highest Address available to BASIC
@@ -20,20 +20,39 @@
     ldy #>TX1
     jsr $AB1E     ;Output String
 
-    ldx #$0B          ;podmiana 6-ciu kolejnych werktorów BASICA
-:   lda NVC,x
-    sta $0300,x       ;Vector: BASIC Error Message
-    dex
-    bpl :-
+    lda #<NOR       ;$E38B
+    ldy #>NOR
+    sta $300
+    sty $301
+
+    lda #<TOKEN     ;old TOKEN = $A57C
+    ldy #>TOKEN
+    sta $304
+    sty $305
+
+    lda #<LIST      ;old LIST = $A71A
+    ldy #>LIST
+    sta $306
+    sty $307
+
+    lda #<DOIT      ;old DOIT = $A7E4
+    ldy #>DOIT
+    sta $308
+    sty $309
+
+    lda #<TEV       ;old TEV = $A7E4
+    ldy #>TEV
+    sta $30A
+    sty $30B
 
     lda #<NSTOP    ;podmiana obsługi klawisza STOP na moją procedurę
     ldy #>NSTOP
     sta $0328      ;Kernal Stop Routine Vector
     sty $0329
 
-    sei          ;podmiana przerwania na moją procedurę
     lda #<IRQ
     ldy #>IRQ
+    sei          ;podmiana przerwania na moją procedurę
     sta $0314    ;Hardware IRQ Interrupt Vector
     sty $0315
     cli
@@ -41,10 +60,6 @@
     rts           ;return from SYS(2069)
 
 .segment "RODATA"
-NVC: .word  NOR,  $A483, TOKEN, LIST,  DOIT,   TEV
-;OVC: .word $E38B, $A483, $A57C, $A71A, $A7E4, $AE86
-;            NOR,  $A483, TOKEN,  LIST,  DOIT,  TEV
-
 TX1: .byte 155,147,"    ..... Wordprocessor BASIC .....", 13, 13
      .byte         "        34816 BASIC bytes free", 13, 0
 

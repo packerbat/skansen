@@ -8,11 +8,13 @@
 ; output:
 ;
 
-.export NXLT, SDX
-.import FNDS, KOL, NGAT, SODS, SAD, POS, PM:zeropage, DX:zeropage
+.export NXLT, SDX, SAD, POS
+.import FNDS, KOL, NGAT, SODS, PM:zeropage, DX:zeropage
 
-.segment "DATA"
-SDX:    .byte 1
+.segment "BSS"
+SDX:   .res 1
+SAD:   .res 2       ;wskaźnik na rysowaną literę
+POS:   .res 1       ;numer kolumny
 
 .segment "CODE"
 .proc NXLT

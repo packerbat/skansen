@@ -28,7 +28,7 @@
     jsr $FFBA           ;SETLFS
     lda #0              ;0=LOAD, 1=VERIFY
     ldx #$00            ;only used if secondary address above = 0
-    ldy #$90
+    ldy #$8C
     jsr $FFD5           ;LOAD
 
     lda #<loadingfonts     ;napis powitalny
@@ -48,7 +48,7 @@
     ldy #$A0
     jsr $FFD5           ;LOAD
 
-    jmp $9000     ;will init wpbasic and return to SYS(2069)
+    jmp $8C00     ;will init wpbasic and return to SYS(2069)
 
 romfilename:   .byte "wpbasic"
 loadingrom:    .byte 13,"loading wpbasic...",0

@@ -6,7 +6,7 @@
 ;    KX - przyrost X
 ;    KY - przyrost Y
 
-.export OROT
+.export OROT, TBM, TBS
 .import ROT, KX:zeropage, KY:zeropage
 
 .segment "CODE"

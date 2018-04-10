@@ -4,7 +4,7 @@
 ; oraz wiem, że nie było to przerwanie spowodowane instrukcją BRK
 
 .export IRQ
-.import MIRQ, NIRQ, STPLAY, NGAT, CONT, PM:zeropage
+.import MIRQ, NIRQ, SIRQ, STPLAY, NGAT, CONT, PM:zeropage
 
 .segment "CODE"
 .proc IRQ
@@ -21,7 +21,7 @@
     beq :+
     jsr MIRQ
 
-:   ;jsr SIRQ
+:   jsr SIRQ        ;w środku jest pętla, która sprawdza, który sprite jest włączony a który nie
 
     lda NGAT        ;NGAT=0 nie ma przewijanego napisu
     beq :+

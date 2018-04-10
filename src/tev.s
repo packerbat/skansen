@@ -3,7 +3,7 @@
 ; zmienia: wszystko
 
 .export TEV
-.import FnSCROLL, FnTEXT, FnPLAY
+.import FnSCROLL, FnTEXT, FnPLAY, FnSPRITE
 
 .segment "CODE"
 .proc TEV
@@ -27,10 +27,9 @@
     pha
     jmp $0073       ;CHRGET: Get next Byte of BASIC Text
 
-:   plp             ;CHRGOT: Get same Byte again
+:   plp             ;restore status after "Get next Byte of BASIC Text"
     jmp $AE8D       ;Continue Evaluate Single Term
 .endproc
 
 .segment "RODATA"
-FN2 = 2
-FNVEC: .word FnTEXT-1, FN2-1, FnSCROLL-1, FnPLAY-1
+FNVEC: .word FnTEXT-1, FnSPRITE-1, FnSCROLL-1, FnPLAY-1

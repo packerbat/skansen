@@ -2,9 +2,17 @@
 90 gosub 30000:goto 1000
 99 rem ----subroutines----
 
+300 rem .... sub maszyna ....
+310 a$="60*06f0*0ff8*1ffc*3fee*77e7*e7e7*e7e7*e7e7*e7e7*e7e7*e7e7*e7e7*e7"
+320 a$=a$+"e7*e7e7*e7e781e7e7c3e7ffffffffffff7ffffe07ffe0":shape 0,a$
+380 return
+
 1000 rem ----czolowka 1----
 1010 cls 0,15,15:hgr:s=2:d=2
 1020 draw @31,174,dram$
+1021 gosub 310
+1022 goto 20000
+
 1025 voice "10f620,10f620,10f620"
 1026 play 1,1,2,3
 1030 scroll cont "Hello! Hello! Hello!  ",2,2
