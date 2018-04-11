@@ -40,7 +40,7 @@
 
     ldy #0
     sty CO          ;Y =0, CO = 0
-    ldx #64         ;długość sprita, pętla po X
+    ldx #63         ;długość sprita, pętla po X
 :   jsr HEX         ;mam poprawny hex więc C=0, A=wartosc, Y-na następnym znaku, albo (C=1) nie hex więc traktuję jak zero
     bcc :+
     lda #0

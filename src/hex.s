@@ -5,6 +5,8 @@
 ;   2. nie ma poprawnej dwucyfrowej liczby hex
 ;   3. jest poprawna dwucyfrowa liczba hex
 ;
+; używa $02 jak zmienną lokalną
+;
 ; input:
 ;   Y - numer litery w stringu
 ;   $BB - wskaźnik do stringu
@@ -22,7 +24,7 @@
 .segment "CODE"
 .proc HEX
     cpy $B7
-    beq koniec_HEX      ;koniec stringu więc koniec definiowania generatorów
+    bcs koniec_HEX      ;Y jest większe lub równe od długości stringu
     lda ($BB),y
     sec
     sbc #'0'                 ;z '0' zrobi się 0 z 'a' zrobi się 17, z 'f' zrobi się 22
@@ -42,7 +44,7 @@
 
     iny
     cpy $B7
-    beq koniec_HEX      ;koniec stringu więc koniec definiowania generatorów
+    beq koniec_HEX      ;koniec stringu, C=1 więc nie trzeba ustawiać
     lda ($BB),y
     sec
     sbc #'0'    ;z '0' zrobi się 0 z 'a' zrobi się 17, z 'f' zrobi się 22
