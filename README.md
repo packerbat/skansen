@@ -50,8 +50,8 @@ Kompilacja sprowadza się do wydania jednego polecenia:
 
 make
 
-W wyniku kompilacji powstaje program `wpbasic.prg` obraz dyskietki `skansen.d64`, który zawiera na razie
-jeden pliki czyli `wpbasic.prg`
+W wyniku kompilacji powstaną programy `wpbasic.prg`, `plfontslg.prg`, `bootloader.prg` i obraz dyskietki
+`skansen.d64`, który zawiera trzy powyższe pliki
 
 ## Uruchamianie
 
@@ -59,15 +59,15 @@ Klasyczne uruchomienie to:
 
 1. uruchomienie emulatora VICE (`x64`),
 2. podłączenie obrazu dyskietki `skansen.d64` do napędu 8,
-3. wczytanie rozszerzenia BASIC-a poleceniem: `LOAD "WPBASIC",8`,
+3. wczytanie rozszerzenia BASIC-a poleceniem: `LOAD "BOOTLOADER",8`,
 4. uruchomienie rozszerzenia BASIC-a poleceniem: `RUN`
 
-W następnych punktach będzie wczytanie i uruchomienie części przewodnika napisanej w BASIC-u,
-ale jeszcze jej nie ma.
+Do odtworzenia jest jeszcze sam przewodnik po skansenie napisany w BASICU a wykorzystujący intensywnie
+polecenia WPBASIC-a.
 
 Aby przetestować sam WPBASIC można te wszystkie czynności skrócić do jednego polecenia:
 
-    x64 -autostart wpbasic.prg
+    x64 -autostart skansen.d64
 
 UWAGA: To są dopiero fragmenty części asemblerowej. Kolejne moduły będę zamieszczał w miarę wolnego czasu.
 
