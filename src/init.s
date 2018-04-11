@@ -61,5 +61,5 @@
 
 .segment "RODATA"
 TX1: .byte 155,147,"    ..... Wordprocessor BASIC .....", 13, 13
-     .byte         "        34816 BASIC bytes free", 13, 0
+     .byte         "        33792 BASIC bytes free", 13, 0
 

@@ -19,6 +19,6 @@
     adc #$A8
     sta PM+1
     ldy #0
-    sta PM
+    sty PM
     rts
 .endproc

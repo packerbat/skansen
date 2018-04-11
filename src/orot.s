@@ -13,7 +13,7 @@
 .proc OROT
     clc
     adc ROT
-    and #$07
+    and #7
     tax
     lda TBM+2,x
     sta KX

@@ -1,7 +1,7 @@
 ;------------------------------------
 ; obsługa tokena SPRITE
 ;   SPRITE ON "011**100" - '0' wyłącza, '1' włącza, '*' nie zmiena stanu sprita o danym numerze
-;   SPRITE <nr>,@x,y,<nr bloku>,<kolor>,<expand xy>,<priority>
+;   SPRITE <nr>,<nr bloku>,<kolor>,<expand xy>,<priority>,@x,y
 ; używa $02, $D7, CO jako zmienne lokalne
 ;
 ; input:
@@ -43,7 +43,7 @@ nie_ma_ON:
     jsr GETSP       ;ustawia $D7 na numer sprita a $02 ma bit tego sprita
     jsr SXY             ;albo weź liczbę albo weź współrzędne po '@' i już tu nie wracaj
     beq koniec_SPRITE
-    cpx #$30            ;jeden z 48 banków pamięci po 64 bajty
+    cpx #$30            ;jeden z 48 banków pamięci po 64 bajty, zaczynających się od $D400
     bcs zla_wartosc
 
     php
@@ -54,7 +54,7 @@ nie_ma_ON:
     clc
     adc #$50
     ldx $D7
-    sta $D3F8,x     ;coś sobie zapimiętuje poniżej 48 banków pamięci
+    sta $D3F8,x     ;8 wskźników na definicje sprita
     lda #$37
     sta $01
     plp             ;odblokowuje przerwania jeśli były poprzednio odblokowane

@@ -37,28 +37,23 @@
     sei
     lda #$34        ;wyłączam KERNEL i BASIC (całą pamięć)
     sta $01
-    ldy #$3F        ;zeruje blok o wielkości 64 bajty
-    lda #0
-:   sta (PM),y
-    dey
-    bpl :-
-    sty CO          ;CO = $FF
 
-:   iny             ;Y - pozycja w stringu
-:   inc CO          ;CO - pozycha w bloku pamięci
-    cpy $B7
-    bcs :+
-    lda ($BB),y
-    cmp #'*'
-    beq :--         ;'*' oznacz pozostaw bez zmian czyli zero
-    jsr HEX
-    sty CO+1        ;przechowaj pozycja litery
+    ldy #0
+    sty CO          ;Y =0, CO = 0
+    ldx #64         ;długość sprita, pętla po X
+:   jsr HEX         ;mam poprawny hex więc C=0, A=wartosc, Y-na następnym znaku, albo (C=1) nie hex więc traktuję jak zero
+    bcc :+
+    lda #0
+    iny             ;pomijam zły znak
+:   sty CO+1        ;przechowaj pozycja litery
     ldy CO
     sta (PM),y
-    ldy CO+1        ;przywróć pozycję litery
-    bne :-          ;ten skok jest bezwarunkowy a Y już wskazuje na następną literę
+    inc CO
+    ldy CO+1        ;Y-litera w stringu
+    dex
+    bne :--         ;ten skok jest bezwarunkowy a Y już wskazuje na następną literę
 
-:   lda #$37        ;przywracam oba ROM-y
+    lda #$37        ;przywracam oba ROM-y
     sta $01
     cli
     rts

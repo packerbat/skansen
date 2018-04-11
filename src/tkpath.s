@@ -3,10 +3,11 @@
 ; jest to rodzaj kompilatora, który zamienia ciąg komend podobnych do DRAW
 ; na blok pamięci w obszarze $A800-$AFFF, bloków może być 8
 ;
-; używa PM, CO - tylko lokalnie
+; używa PM, CO, AP, DX - tylko lokalnie
 ;
 ; input:
-;   A - byte to tokenie SHAPE
+;   BASIC pcode
+;   A - byte po tokenie SHAPE
 ;   Z - 1=koniec
 ; output:
 ;
@@ -17,20 +18,20 @@
 .segment "CODE"
 .proc TkPATH
     jsr $E211
-    jsr GETB
-    jsr $E254       ;Get Parameters For OPEN/CLOSE, używa PM
+    jsr GETB        ;ustawia PM ale następna procedura niszczy
+    jsr $E254       ;Get Parameters For OPEN/CLOSE
 
     ldy #0          ;pozycja w bloku
+    sty CO          ;Y=0, CO pozycja w bloku
     lda $B7
     beq koniec_PATH     ;string nie może być pusty
 
-    sty CO          ;Y=0, CO pozycja w bloku
 :   lda ($BB),y
-    sta AP          ;przechowalnia dla komendy
+    sta AP          ;przechowalnia dla komendy, można zastąpić przez stos
     jsr NUM         ;wynik w DX
     lda DX
     bne :+
-    inc DX          ;krok nie może być mniejszy niż1
+    inc DX          ;krok nie może być mniejszy niż 1
 :   sty CO+1
     ldy CO
     lda AP          ;A=komenda
@@ -41,7 +42,7 @@
     cpx #'*'
     bne :+
     clc
-    adc #$50        ;'*' zwiększa odległość o $50?
+    adc #$50        ;'*' ustala adres jednego z 48 kształtów, jakie może przybrać sprite
 :   sta (PM),y
     iny
     sty CO
@@ -50,7 +51,10 @@
     bcc :---
 
 koniec_PATH:
+    ldy CO
     lda #0
+    sta (PM),y      ;dwa zera kończą ścieżkę
+    iny
     sta (PM),y
     rts
 .endproc

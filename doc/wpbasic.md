@@ -418,7 +418,7 @@ oznacza, że wszystkie 3 generatory będą zaprogramowane identycznie:
 ### PLAY
 
 Komenda PLAY służy uruchamia muzyki w tle. Wcześniej muszą być zdefiniowane melodie (MUSIC) i ustawione
-generatory (VOICE). Komenda PLAY ma dwei formy:
+generatory (VOICE). Komenda PLAY ma dwie formy:
 
     PLAY [CONT] tempo, melid1[, melid2[, melid3]]"
     PLAY STOP gen1[, gen2[, gen3]]
@@ -438,6 +438,116 @@ Przykład:
 oznacza, że melodia 4 będzie odtwarzana na generatorze 1, melodia 5 na generatorze 2 i melodia 6 na generatorze 3.
 Melodie zostaną odtworzone bez spowolnienia (*tempo*=1)
 
+
+### SCROLL
+
+Komenda SCROLL jest najmniej uniwersalną komendą. Komenda SCROLL ma dwie formy:
+
+    SCROLL [CONT] "treść" [, hscale=1 [, space=1 [, delay=1]]]
+    SCROLL STOP
+
+Pierwsza forma rozpoczyna przewijanie podanej treści od lewej do prawej. Pasek ma stałe miejsce w dolnej
+części kranu (lewy górny narożnik to x=32, y=176, a rozmiar to 256 na 16 pikseli). Dzięki tym
+nieprzypadkowym wymiarom, procedura przewijania napisu jest bardzo optymalnie napisana i można przewijać
+z prędkością 60 FPS. Druga forma zatrzymuje przewijanie napisu (nie czyści paska przewijania). 
+Jeśli wystąpi słowo CONT to napis będzie przewijał się w kółko (warto zadbać o kilka spacji na końcu
+aby początek nie zlewał się końcem. Opcjonalny parametr
+*hscale* jest mnożnikiem szerokości litery. Domyślna wartość to 1 - normalna szerokość. Gdy ten parametr jest 
+równy np. 2 to litery będą dwa razy szersze (symulacja liter wytłuszczonych). Kolejny opcjonalny
+parametr *space* to odstęp między literami, który domyślnie wynosi 1 piksel. Zwiększenie tego parametru
+dale efekt rozstrzelonych liter. Następny opcjonalny parametr *delay* decyduje o prędkości przewijania napisu.
+Domyślnie jest on równy 1 czyli przewijanie z pełną prędkością. Jeśli będzie miał wartość większą niż 1 to
+będą dokładane kolejne 1/60 sekundy pomiędzy każde przesunięcie.
+
+### SHAPE
+
+Komenda SHAPE jest rodzajem kompilatora, który tekstową definicję sprita zamieni na binarną i umieści
+w jednym z 48 bloków pamięci po 64 bajty. Bloki są numerowane do 0 do 47. Komenda SHAPE ma składnię:
+
+    SHAPE blok, "definiacja"
+
+Pierwszy parametr *blok* to numer bloku pamięci w zakresie 0-47. Drugi parametr to 63 wartości 8-bitowe
+definiująca kształt sprita. Wartości podaje się jako dwucyfrowe liczby szesnastkowe, przy czym wartość zero
+'00' można zastąpić przez '*'. Nie trzeba podawać wszystkich wartości, jeśli na końcu kształtu występują
+same zera to definicję można skrócić.
+
+VIC-II oferuje tylko 8 spritów widocznych w danym czasie na ekranie, jednak definicji jest 48 aby można
+było w locie zmieniać kształt danego sprita i w ten sposób uzyskać efekt animacji.
+
+### SPRITE
+
+Komenda SPRITE służy do konfigurowania spritów. Ma dwie formy:
+
+    SPRITE nr, kształt [, kolor [, powiększenie [, priorytet]]] [, @x,y]
+    SPRITE ON "przełączniki"
+
+Pierwsza forma konfiguruje wskazany sprite a druga forma pozwala aktywować lub ukrywać wskazaną grupę
+spritów. Pierwszy parametr *nr* ma wartość w zakresie 0-7 i identyfikuje fizyczny sprite układu VIC-II.
+Drugi parametr *kształt* określa numer bloku pamięci z kształtem sprita. Ten parametr może mieć wartość
+w zakresie 0-47. Jeśli wcześniej nie zostanie zdefiniowany kształt komendą SHAPE to oczywiście jego
+wygląd będzie losowy. Trzeci, opcjonalny parametr *kolor* określa kolor sprita. Czwarty, również
+opcjonalny parametr, o nazwie *powiększenie* może jedną z czterech wartość:
+
+* wartość 0 oznacza, że sprite nie będzie powiększony,
+* wartość 1 oznacza, że będzie dwukrotnie szerszy,
+* wartość 2 oznacza, że będzie dwukrotnie wyższy,
+* wartość 3 oznacza, że będzie dwukrotnie powiększony w obu kierunkach.
+
+Piąty, opcjonalny parametr o nazwie "priorytet" będzie decydował czy sprite jest ważniejszy
+od treści ekranu pod spritem. Może mieć tylko dwie wartość 0 albo 1. Wartość 0 oznacza, że sprite
+będzie zawsze ważniejszy od pikseli pod spritem. Wartość 1 oznacza, że sprite "wejdzie" pod niezerowe
+piksele ekranu.
+
+Jeśli wystąpi znak '@' to komenda będzie oczekiwała dwóch liczba, które określą współrzędne sprita na 
+ekranie. Współrzędna X może mięć wartość w zakresie 0-370 a współrzędna Y może mieć wartość w zakresie
+0-250. Współrzędne spritów są większe niż ekran, żeby można je było ukrywać poza widocznym obszarem ekranu.
+Jeśli wystąpią współrzędne to automatycznie sprite zostanie włączony.
+
+Druga forma komendy służy do grupowego włączania i wyłączania spritów. Parametr *przełączniki* składa
+się od 1 do 8 znaków a każdy znak może być:
+
+* '1' - odblokuj ten sprite,
+* '0' - zablokuje ten sprite,
+* '*' - nie zmieniaj stanu.
+
+
+### PATH
+
+Komenda PATH podobnie, jak SHAPE jest rodzajem kompilatora, który zamieni tekstową ścieżkę animacji
+sprita na binarną i umieści ją w jednym z 8 ścieżek. Ścieżka może mieć do 128 kroków. Składnia:
+
+    PATH nr, "definicja"
+
+Pierwszy parametr to numer ścieżki i może mieć wartość 0-7. Definicja kształtu ścieżki to wyrażenie
+tekstowe, którego znaki mają specjalne znaczenie dla komendy MOVE. Każdy ruch
+może się odbywać w jednym z 8. kierunków na podaną odległość:
+
+    "<k1>[<d2>]<k2>[<d2>]<k3>[<d3>] ... <kn>[<dn>]"
+
+Kierunki są wyznaczone przez litery 'a' ... 'h' (można użyć 'A' ... 'H' bo w przeciwieństwie do DRAW
+wielki litery nie powodują znikania sprita). Litery "a" to ruch w prawo, litery "b" to ruch skośny
+prawo-dół i tak dalej zgodnie z ruchem wskazówek zegara. Odległości są podawane w pikselach w zakresie
+1 do 255 (liczba całkowita). Jeśli dystans zostanie pominięty to PATH przyjmie wartość 1.
+
+### MOVE
+
+Komenda MOVE służy do uruchamiania lub zatrzymywania animacji sprita. Ma dwie formy:
+
+    MOVE [CONT] sprite, ścieżka [, rot=0 [, delay=1]] [,  @x,y] 
+    MOVE STOP sprite1[, sprite2[, ...]]
+
+Pierwsza forma rozpoczyna animację skazanego sprite (parametr *sprite* w zakresie 0-7) wzdłuż
+podanej ścieżki (parametr *ścieżka* w zakresie 0-7). Opcjonalny parametr *rot* o zakresie
+wartości 0-7 pozwala zmienić globalną rotację ścieżki. Kolejny opcjonalny parametr *delay*
+określa prędkość animacji. Minimalna i zarazem domyślna wartość tego parametru to 1 czyli
+co 1/60 sekundy nastąpi ruch sprita we wskazanym kierunku o 1 piksel.
+
+Opcjonalny parametr rozpoczynający się znakiem '@' określa punkt startowy animacji. Jeśli ten
+parametr zostanie pominięty to animacja rozpocznie się od ostatniego punktu, w którym znajdował
+się dany sprite.
+
+Droga forma komendy MOVE zatrzymuje animację wskazanych spritów. Kolejność numerów nie ma znaczenia,
+ważne żeby numery spritów mieściły się w zakresie 0-7.
 
 ## Zmiany istniejących komend BASIC-a
 

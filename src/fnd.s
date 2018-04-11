@@ -29,7 +29,7 @@ TABL: .word $0000,$A000,$A1A0,$0000, $0000,$A520,$A368,$0000
 DX:   .res 2
 DY:   .res 2
 
-.segment "UTIL": zeropage
+.segment "UPTRS": zeropage
 PM:   .res 2
 
 .segment "CODE"

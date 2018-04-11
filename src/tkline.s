@@ -3,6 +3,8 @@
 ; w trybie rysowania PTYP
 ; pobiera parametry: XC, YC, XK, YK, PTYP (opcjonalnie = 1)
 ;
+; zmienne lokalne: KX, KY, DX, DY
+;
 ; input:
 ;
 ; output:

@@ -7,7 +7,7 @@
 
 .export COD, CO
 
-.segment "UTIL": zeropage
+.segment "UPTRS": zeropage
 CO:   .res 2
 
 .segment "CODE"

@@ -1,6 +1,6 @@
 ;------------------------------------
 ; obsługa tokena MOVE
-;   MOVE [CONT] <nr>, <path>, <MRO>, <speed> @x,y
+;   MOVE [CONT] <nr>, <path>, <rot>, <speed> @x,y
 ;   MOVE STOP <nr>,<nr>,...
 ;
 ; W oryginale było blokowanie przerwań w trakcie wypełniania struktury sprita
@@ -42,6 +42,8 @@ MIK:   .res 8           ;domyślnie 1, licznik kroków w danym kierunku
     jsr $B79E       ;Evaluate Text to 1 Byte in XR, adres jednego z 8 bloków o długości 256 bajtów w obszarze $A800-$AFFF, Y=0
     txa
     and #7
+    clc
+    adc #$A8        ;żeby był adres
     ldx $D7
     sta MGT,x       ;adres bloku
     lda #0
@@ -85,7 +87,7 @@ move_stop:
     and #7
     tax
     lda #0
-    sta MGT,x       ;zatrzyma przerwania dla tego sprita (ale go nie usunie z ekranu)
+    sta MWO,x       ;zatrzyma przerwania dla tego sprita (ale go nie usunie z ekranu)
     jsr $0079       ;CHRGOT: Get same Byte again
     bne :--         ;sprawdź przecinek i pobierz bajt
     rts
