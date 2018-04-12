@@ -1,6 +1,47 @@
 10 dram$="c18a129a128g17Ge128e129ha128a128Ac18hg17Ge128e129ha128a128Ac18"
+12 gram$="c145a129a130g145e130e129ha130a129c145hg144"
+14 g1rm$="c145a128a129g145e128e129ha128a129c145hg144C142a24"
+16 g1rm$=g1rm$+"d9e148e149h9a14E14D9c20a22A128A129a18g20c20h9g19"
+20 wl$="b4c6d4ef4g6h4e5d4c6b4G14e128e129d4c6b4G14e6d4c6b4a130a138"
+22 wl$=wl$+"f4e130e138g6a130a138h4"
+24 ek$="e128e129c129a128a129g129ac129a6"+wl$+"G143"+wl$+"C19E16"
+26 ek$=ek$+"e235ded3cdc107bcb3aba235hah3ghg107fgf3ef"
+28 tb$="c179a130a129g179e130e129ha130a129c179hg179e130e129"
+30 tab$="c128a200a119a128e200e119a140c128a60g128a60c128a60g112e200e119"
+32 bk$="c177a128a129g177e128e129ha128a129c177g4h11g173d11h11e129e128d12Eh13"
+34 bk$=bk$+"dded8hheh4a3h5a128a129c177e4a4hg177e129e128ed2ed2ed2ed"
+36 ds$="a150a152h12e150e152d12c3a150a152g2c2h12h3D6C3c179d4g179C179e150e144"
+38 ds$=ds$+"g176C176"
 40 path 2,"h8d8h8d8h8d8h8d8h8d8h8d8h8d8h8d8h8d8h8d8h8d8h8d8"
-90 gosub 30000:goto 1000
+42 rem ----init music----
+44 a$="a448gc5d524ge548d524ge548cda4g"
+46 a$=a$+"a448gc5d524ge548d524ge548cda4g"
+48 a$=a$+"g448aeg424ad448a424hg448g5ed524cg448"
+50 a$=a$+"g448aeg424ad448a424hg448g5ed524cg448"
+52 a$=a$+".2a448gc5d524ge548d524ge548cda4g496"
+54 music 1,a$
+56 :
+58 a$=".48.........."
+60 a$=a$+"e448deggggaaFd"
+62 a$=a$+".48......g448ggd"
+64 a$=a$+".48......g448ggd"
+66 a$=a$+".2e448deggggaaFd496"
+68 music 2,a$
+70 :
+72 a$=".48.........."
+74 a$=a$+"a348hahhhc4eddh3"
+76 a$=a$+".48......g348c4dg3"
+78 a$=a$+".48......g348c4dg3"
+80 a$=a$+".2a348hahhhc4eddh396"
+82 music 3,a$
+84 :
+86 music 4,"c524ec548"
+88 music 5,"e424ge448"
+90 music 6,"g324cg348"
+92 :
+94 music 7,"c630g629"
+96 music 8,"c71"
+98 goto 1000
 99 :
 100 rem **** pisz(a$,s=szer,d=odst,p=predkosc)
 110 x=160-text(a$,s,d)/2
@@ -36,7 +77,7 @@
 399 :
 400 rem **** czekaj()
 420 if peek(709)<>1 then 420
-430 scroll "{crsr right}255",1,1,2
+430 scroll "{29}255",1,1,2
 440 if scroll then 440
 450 return
 499 :
@@ -64,7 +105,7 @@
 720 for i=1 to l:read a$
 730 if left$(a$,1)="*" then a$=chr$(34)+right$(a$,len(a$)-1)+chr$(34)
 750 b$=str$(int(119-text(a$,1,1)/2))
-760 a$(i)="{crsr right}"+right$(b$,len(b$)-1)+a$
+760 a$(i)="{29}"+right$(b$,len(b$)-1)+a$
 770 next
 780 return
 799 :
@@ -81,48 +122,25 @@
 1010 cls 0,15,15:hgr:s=2:d=2
 1020 draw @31,174,dram$
 1025 voice "10f620,10f620,10f620"
-1026 play 1,1,2,3
+1026 rem play 1,1,2,3
 1030 scroll cont "Wildex  &  Wildesoft           ",2,2
 1040 p=1:y=8:d=3:a$="WILDEX":gosub 100
 1050 y=y+18:a$="&":gosub 100
 1060 y=y+18:a$="WILDESOFT":gosub 100
 1070 s=1:d=4:y=y+18
-1080 a$="Prezentuja{crsr right}2:":gosub 100
+1080 a$="Prezentuja{29}2:":gosub 100
 1090 y=y+22:text@10,y,"- komputerowy informator",1,1,1
 1095 y=y+16:text@162,y,"Agrofilmowej Wiosny",1,1,1
 1100 y=y+22:text@10,y,"- Przewodnik po Muzeum Rolnictwa",1,1,1
 1110 y=y+16:text@130,y,"im. ks. Krzysztofa Kluka",1,1,1
 1120 if play(1) then 1120
 1130 pause 5:scroll stop:cls:volume 0
+1200 rem .... strona 2 ....
+1210 draw @31,174,dram$
+1220 scroll cont "Informator Agrofilmowej Wiosny{29}80"
+1230 y=0:text@15,y,"Agrifilmowa Wiosna",2,1:text"{29}7gosci"
+1240 y=y+16:text@0,y,"w{29}14Ciechanowcu{29}14juz{29}14poraz{29}10 13{29}2.{29}17Pierwsza"
+1250 y=y+16:text@0,y,"impreza{29}9tego{29}9typu{29}9odbyla{29}10sie{29}10w{29}10roku 1974"
 19999 :
-20000 nrm:end
-29999 rem ----init music----
-30000 a$="a448gc5d524ge548d524ge548cda4g"
-30010 a$=a$+"a448gc5d524ge548d524ge548cda4g"
-30020 a$=a$+"g448aeg424ad448a424hg448g5ed524cg448"
-30030 a$=a$+"g448aeg424ad448a424hg448g5ed524cg448"
-30040 a$=a$+".2a448gc5d524ge548d524ge548cda4g496"
-30050 music 1,a$
-30095 :
-30100 a$=".48.........."
-30110 a$=a$+"e448deggggaaFd"
-30120 a$=a$+".48......g448ggd"
-30130 a$=a$+".48......g448ggd"
-30140 a$=a$+".2e448deggggaaFd496"
-30150 music 2,a$
-30195 :
-30200 a$=".48.........."
-30210 a$=a$+"a348hahhhc4eddh3"
-30220 a$=a$+".48......g348c4dg3"
-30230 a$=a$+".48......g348c4dg3"
-30240 a$=a$+".2a348hahhhc4eddh396"
-30250 music 3,a$
-30295 :
-30300 music 4,"c524ec548"
-30310 music 5,"e424ge448"
-30320 music 6,"g324cg348"
-30395 :
-30400 music 7,"c630g629"
-30410 music 8,"c71"
-30900 return
+20000 pause:nrm
 

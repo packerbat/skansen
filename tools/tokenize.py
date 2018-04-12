@@ -123,6 +123,10 @@ def find_token(line, sptr):
                 return token
     return None
 
+def get_special_char(line, sptr):
+    return c
+
+
 def tokenize_one_line(line):
     global BASICTokens
     cytat = None                 # None = no, 34 = wait for ", 0 = wait for line end
@@ -135,7 +139,7 @@ def tokenize_one_line(line):
         llen -= 1
         line = line[:llen]
     if llen < 3: raise BasicSyntaxError(line)                                           # one digit and one space - so this line is empty
-    if llen > 80: sys.stderr.write("suspicious line length: line:{}\n".format(line))    # only warning
+    if llen > 100: sys.stderr.write("suspicious line length: line:{}\n".format(line))    # only warning
 
     # parse line number
     linenumber = 0
@@ -154,6 +158,14 @@ def tokenize_one_line(line):
         if not cytat is None:
             c = ord(line[sptr])
             if c == cytat: cytat = None
+            elif c == 123:
+                c = 0
+                sptr += 1
+                while sptr < llen and line[sptr] >= '0' and line[sptr] <= '9' and c < 256:
+                    c *= 10
+                    c += ord(line[sptr]) - 48
+                    sptr += 1
+                if line[sptr] != '}': raise BasicSyntaxError(line)
             elif c >= 97 and c <= 127: c -= 32
             elif c >= 65 and c <= 95: c += 128
             pcode[dptr] = c
