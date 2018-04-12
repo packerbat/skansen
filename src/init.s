@@ -50,12 +50,12 @@
     sta $0328      ;Kernal Stop Routine Vector
     sty $0329
 
-    ;lda #<IRQ
-    ;ldy #>IRQ
-    ;sei          ;podmiana przerwania na moją procedurę
-    ;sta $0314    ;Hardware IRQ Interrupt Vector
-    ;sty $0315
-    ;cli
+    lda #<IRQ
+    ldy #>IRQ
+    sei          ;podmiana przerwania na moją procedurę
+    sta $0314    ;Hardware IRQ Interrupt Vector
+    sty $0315
+    cli
 
     rts           ;return from SYS(2069)
 
