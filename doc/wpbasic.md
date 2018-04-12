@@ -3,16 +3,17 @@
 ## Uruchamianie
 
 Niestety nie pamiętam, dlaczego to rozszerzenie BASIC-a nazywa się WORDPROCESSOR BASIC, ale tak
-go nazwałem i na razie zachowuję tę nazwę. Program ładujemy standardową procedurą:
+go nazwałem i na razie zachowuję tę nazwę. Rozszerzenie najprościej załadować specjalnym programem
+ładującym o nazwie `BOOTLOADER.PRG`:
 
     LOAD "BOOTLOADER",8
 
-a po załadowaniu, uruchamiamy poleceniem:
+który po załadowaniu, uruchamiamy poleceniem:
 
     RUN
 
-W trakcie inicjowania rozszerzenia BASIC-a zostanie automatycznie załadowana czcionka o nazwie
-PLFONTSLG.PRG.
+Ten mini program ładujący wczyta dwa pliki: WPBASIC.PRG i PLFONTSLG.PRG, umieści je w odpowiednim
+miejscu pamięci operacyjnej a następnie uruchomi procedurę inicjującą rozszerzenie BASIC-a.
 
 ## Nowe komendy BASIC-a
 
@@ -548,6 +549,85 @@ się dany sprite.
 
 Droga forma komendy MOVE zatrzymuje animację wskazanych spritów. Kolejność numerów nie ma znaczenia,
 ważne żeby numery spritów mieściły się w zakresie 0-7.
+
+### SHIFT
+
+Komenda SHIFT służy do podnoszenia treści okna o stałej szerokości 256 pikseli umieszczonego
+na środku ekranu graficznego i obniżonego o 16 pikseli (lewy margines = 32, prawy margines = 32
+górny margines = 16). Wysokość tego okna można regulować parametrem
+ale tylko ze skokiem 8 pikseli. Procedura podnosi treść o 8 pikseli, a ostatni wiersz wypełnia zerami.
+Składnia:
+
+    SHIFT [rows = 18]
+
+Jeśli parametr nie wystąpi to procedura podnosi treść o wysokości 18 wierszy po 8 pikseli.
+
+**Przykład 8, test podnoszenia o 8 pikseli**
+
+    10 hgr 1,0
+    20 cls
+    30 line 0,0,320,200:line 0,200,320,0
+    40 ex=32:ey=16:ew=256:eh=144
+    50 line ex-1,ey-1,ex+ew,ey-1:line to ex+ew,ey+eh
+    60 line to ex-1,ey+eh:line to ex-1,ey-1
+    70 for i=1 to 20
+    80 pause 60
+    90 shift
+    100 next
+    110 pause
+    120 nrm
+    run
+
+Program narysuje dwie skośne linie oraz prostokątną ramkę, która nie będzie przesuwana przez komendę
+SHIT. Następnie program, co sekundę, będzie podnosił treść ekranu graficznego wewnątrz ramki
+o 8 pikseli.
+
+### UP
+
+Komenda UP służy do podnoszenia treści okna o stałej szerokości 256 pikseli umieszczonego
+na środku ekranu graficznego i obniżonego o 16 pikseli (lewy margines = 32, prawy margines = 32
+górny margines = 16). Wysokość tego okna można regulować parametrem
+ale tylko ze skokiem 8 pikseli. Procedura podnosi treść o 1 piksel, a ostatni wiersz wypełnia albo
+zerami albo linią podaną jako drugi parametr. Wypełnienie tej linii może mieć maksymalnie długość
+32 bajtów (256 pikseli) i trzeba je podać jako ciąg dwucyfrowych licz szesnastkowych (wartość zero
+można zastąpić znakiem '*'). Jeśli podany ciąg liczb jest krótszy to brakujące bajty zostaną wypełnione
+zerami. Składnia:
+
+    UP [rows = 18 [, "patern"]]
+
+Jeśli parametr nie wystąpi to procedura podnosi treść o wysokości 18 wierszy po 8 pikseli.
+
+**Przykład 9, test podnoszenia o 1 pikseli**
+
+    10 hgr 1,0
+    20 cls
+    30 line 0,0,320,200:line 0,200,320,0
+    40 ex=32:ey=16:ew=256:eh=144
+    50 line ex-1,ey-1,ex+ew,ey-1:line to ex+ew,ey+eh
+    60 line to ex-1,ey+eh:line to ex-1,ey-1
+    70 for i=1 to 20
+    80 pause 60
+    90 up 18,"0000000000000000000000000000000000000000000000000000000000000000"
+    100 next
+    110 pause
+    120 nrm
+    run
+
+Program narysuje dwie skośne linie oraz prostokątną ramkę, która nie będzie przesuwana przez komendę
+UP. Następnie program, co sekundę, będzie podnosił treść ekranu graficznego wewnątrz ramki
+o 1 piksel. W linii 90 pokazane jest wywołanie komendy UP domyślnymi wartościami obu parametrów.
+
+#### SEI
+
+Komenda SEI wywołuje polecenie w języku maszynowym o tej samej nazwie. Polecenie ustawi maskę przerwań, 
+a to spowoduje zablokowanie przerwań. Uwaga: w trakcie zablokowanych przerwań nie działa klawiatura
+i jeszcze kilka innych podzespołów dlatego to polecenie trzeba używać z ogromną ostrożnością i na
+jak najkrótszy czas.
+
+#### CLI
+
+Komenda CLI wywołuje polecenie w języku maszynowym o tej samej nazwie. Polecenie usunie maskę przerwań,
+a to spowoduje odblokowanie przerwań.
 
 ## Zmiany istniejących komend BASIC-a
 

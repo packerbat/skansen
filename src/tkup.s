@@ -44,25 +44,25 @@
 
     sei
     lda #$34
-    sta $01         ;BASIC i KERNAL ROM wyłączone
+    sta $01         ;BASIC, KERNAL i I/O wyłączone
     lda #$A0
-    lda #$E2
+    ldx #$E2
     sta AD
     stx AD+1        ;A/X adres docelowy
-:   dec $02         ;ilość wierszy do przewinięcia
-    bmi :++++
+
+nastepny_wiersz:
     sta AD          ;Destination pointer
     stx AD+1
     clc
     adc #1
     sta AP          ;Source pointer AD+1
     stx AP+1
-    adc #40         ;KX=AD+1+40+256,  dziwne?
+    adc #56         ;KX=AP-1+320-7
     sta KX
-    inx
     bcc :+
     inx
-:   stx KX+1
+:   inx
+    stx KX+1
 
 :   ldx #7
 :   lda (AP),y
@@ -70,20 +70,21 @@
     iny
     dex
     bne :-
-    lda (KX),y
+    lda (KX),y      ;w tym miejscu będzie przekroczenie pamięci ekranu przy podnoszeniu wiersza 25 (bo będzie odwołanie do wiersza 26)
     sta (AD),y
     iny
     bne :--
-    lda AD
-    ldx AD+1
-    inx
     clc
+    lda AD          ;trzeba dodać 320 czyli $140
+    ldx AD+1
     adc #$40
-    bcc :----
+    bcc :+
     inx
-    bcs :----
+:   inx
+    dec $02         ;ilość wierszy do przewinięcia
+    bne nastepny_wiersz
 
-:   ldx #0
+    ldx #0
     ldy #7
     clc
 :   lda $A6E0,x
@@ -96,7 +97,7 @@
     bcc :-
 
     lda #$37
-    sta $01         ;BASIC i KERNAL ROM włączone
+    sta $01         ;BASIC, KERNAL i I/O włączone
     cli
     rts
 .endproc

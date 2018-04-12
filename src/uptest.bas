@@ -4,9 +4,9 @@
 40 ex=32:ey=16:ew=256:eh=144
 50 line ex-1,ey-1,ex+ew,ey-1:line to ex+ew,ey+eh
 60 line to ex-1,ey+eh:line to ex-1,ey-1
-70 for i=1 to 20
+70 for i=1 to 10
 80 pause 60
-90 up 1
+90 up 18,"0000000000000000000000000000000000000000000000000000000000000000"
 100 next
 110 pause
 120 nrm
