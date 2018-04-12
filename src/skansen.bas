@@ -26,7 +26,7 @@
 300 rem **** maszyna()
 310 a$="600006f0000ff8001ffc003fee0077e700e7e700e7e700e7e700e7e700e7e700e7"
 320 a$=a$+"e700e7e700e7e700e7e700e7e781e7e7c3e7ffffffffffff7ffffe07ffe0"
-225 shape 0,a$
+325 shape 0,a$
 330 a$="607e06f0ff0ff8ff1ffcff3feeff77e7ffe7e7ffe7e7ffe7e7ffe7e7ffe7e7ffe7"
 340 a$=a$+"e7ffe7e7ffe7e77ee7e73ce7e7bde7e7ffe7ffffffffffff7ffffe07ffe0"
 350 shape 1,a$
@@ -76,26 +76,25 @@
 940 sprite 1,3,11,0,1
 950 path 1,"*3!30*4!30"
 960 return
-999:
+999 :
 1000 rem ----czolowka 1----
 1010 cls 0,15,15:hgr:s=2:d=2
 1020 draw @31,174,dram$
 1025 voice "10f620,10f620,10f620"
-1026 rem play 1,1,2,3
+1026 play 1,1,2,3
 1030 scroll cont "Wildex  &  Wildesoft           ",2,2
 1040 p=1:y=8:d=3:a$="WILDEX":gosub 100
 1050 y=y+18:a$="&":gosub 100
 1060 y=y+18:a$="WILDESOFT":gosub 100
 1070 s=1:d=4:y=y+18
-1080 a$="Prezentuja-":gosub 100
+1080 a$="Prezentuja{crsr right}2:":gosub 100
 1090 y=y+22:text@10,y,"- komputerowy informator",1,1,1
 1095 y=y+16:text@162,y,"Agrofilmowej Wiosny",1,1,1
 1100 y=y+22:text@10,y,"- Przewodnik po Muzeum Rolnictwa",1,1,1
 1110 y=y+16:text@130,y,"im. ks. Krzysztofa Kluka",1,1,1
 1120 if play(1) then 1120
 1130 pause 5:scroll stop:cls:volume 0
-
-
+19999 :
 20000 nrm:end
 29999 rem ----init music----
 30000 a$="a448gc5d524ge548d524ge548cda4g"
