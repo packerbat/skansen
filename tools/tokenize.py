@@ -114,6 +114,28 @@ BASICTokens = {
     0xE5: "play"
 }
 
+SpecialChars = {
+    '}': 29,
+    'ą': 176,
+    'ć': 187,
+    'ę': 172,
+    'ł': 182,
+    'ń': 180,
+    'ó': 161,
+    'ś': 174,
+    'ż': 165,
+    'ź': 181,
+    'Ą': 171,
+    'Ć': 178,
+    'Ę': 177,
+    'Ł': 162,
+    'Ń': 183,
+    'Ó': 162,
+    'Ś': 179,
+    'Ż': 163,
+    'Ź': 184
+}
+
 def find_token(line, sptr):
     global BASICTokens
     for token, verb in BASICTokens.items():
@@ -128,7 +150,7 @@ def get_special_char(line, sptr):
 
 
 def tokenize_one_line(line):
-    global BASICTokens
+    global BASICTokens, SpecialChars
     cytat = None                 # None = no, 34 = wait for ", 0 = wait for line end
     pcode = bytearray(88)        # original size of line buffer in C64
     sptr = 0                     # position in source
@@ -156,18 +178,13 @@ def tokenize_one_line(line):
     # parse BASIC text
     while sptr < llen:
         if not cytat is None:
-            c = ord(line[sptr])
-            if c == cytat: cytat = None
-            elif c == 123:
-                c = 0
-                sptr += 1
-                while sptr < llen and line[sptr] >= '0' and line[sptr] <= '9' and c < 256:
-                    c *= 10
-                    c += ord(line[sptr]) - 48
-                    sptr += 1
-                if line[sptr] != '}': raise BasicSyntaxError(line)
-            elif c >= 97 and c <= 127: c -= 32
-            elif c >= 65 and c <= 95: c += 128
+            if line[sptr] in SpecialChars.keys():
+                c = SpecialChars[line[sptr]]
+            else:
+                c = ord(line[sptr])
+                if c == cytat: cytat = None
+                elif c >= 97 and c <= 127: c -= 32
+                elif c >= 65 and c <= 95: c += 128
             pcode[dptr] = c
             dptr += 1
             sptr += 1

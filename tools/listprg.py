@@ -116,26 +116,49 @@ BASICTokens = {
     0xE5: "play"
 }
 
+SpecialChars = {
+    29: '}',
+    176: 'ą',
+    187: 'ć',
+    172: 'ę',
+    182: 'ł',
+    180: 'ń',
+    161: 'ó',
+    174: 'ś',
+    165: 'ż',
+    181: 'ź',
+    171: 'Ą',
+    178: 'Ć',
+    177: 'Ę',
+    162: 'Ł',
+    183: 'Ń',
+    162: 'Ó',
+    179: 'Ś',
+    163: 'Ż',
+    184: 'Ź'
+}
+
 def list_one_line(f, outfile, length):
     global BASICTokens
     chunk = f.read(2)
     if len(chunk) != 2: raise UnexpectedEndOfFileError
     linenumber, = struct.unpack("<H",chunk)
     outfile.write("{} ".format(linenumber))
-    cytat = False
+    cytat = None                                    # may be None, 34 or 0
     for i in range(length-3):
         chunk = f.read(1)
         if len(chunk) != 1: raise UnexpectedEndOfFileError
-        if chunk[0] >= 32 and chunk[0] <= 63:
-            outfile.write("{}".format(chunk.decode()))
-            if chunk[0] == 34:
-                cytat = not cytat
+        if chunk[0] >= 32 and chunk[0] <= 64:
+            outfile.write("{:c}".format(chunk[0]))
+            if cytat is None and chunk[0] == 34: cytat = chunk[0]
+            elif cytat is not None and chunk[0] == cytat: cytat = None
         elif chunk[0] >= 65 and chunk[0] <= 127:
             outfile.write("{:c}".format(chunk[0]+32))
-        elif chunk[0] == 64:
-            outfile.write("{:c}".format(chunk[0]))
-        elif chunk[0] in BASICTokens.keys() and not cytat:
+        elif cytat is not None and chunk[0] in SpecialChars.keys():
+            outfile.write(SpecialChars[chunk[0]])
+        elif cytat is None and chunk[0] in BASICTokens.keys():
             outfile.write(BASICTokens[chunk[0]])
+            if chunk[0] == 0x8F: cytat == 0                         # REM token
         elif chunk[0] >= 193 and chunk[0] <= 223:
             outfile.write("{:c}".format(chunk[0]-128))
         else:

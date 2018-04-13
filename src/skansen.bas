@@ -77,7 +77,7 @@
 399 :
 400 rem **** czekaj()
 420 if peek(709)<>1 then 420
-430 scroll "{29}255",1,1,2
+430 scroll "}255",1,1,2
 440 if scroll then 440
 450 return
 499 :
@@ -105,7 +105,7 @@
 720 for i=1 to l:read a$
 730 if left$(a$,1)="*" then a$=chr$(34)+right$(a$,len(a$)-1)+chr$(34)
 750 b$=str$(int(119-text(a$,1,1)/2))
-760 a$(i)="{29}"+right$(b$,len(b$)-1)+a$
+760 a$(i)="}"+right$(b$,len(b$)-1)+a$
 770 next
 780 return
 799 :
@@ -128,7 +128,7 @@
 1050 y=y+18:a$="&":gosub 100
 1060 y=y+18:a$="WILDESOFT":gosub 100
 1070 s=1:d=4:y=y+18
-1080 a$="Prezentuja{29}2:":gosub 100
+1080 a$="Prezentują}2:":gosub 100
 1090 y=y+22:text@10,y,"- komputerowy informator",1,1,1
 1095 y=y+16:text@162,y,"Agrofilmowej Wiosny",1,1,1
 1100 y=y+22:text@10,y,"- Przewodnik po Muzeum Rolnictwa",1,1,1
@@ -137,10 +137,18 @@
 1130 pause 5:scroll stop:cls:volume 0
 1200 rem .... strona 2 ....
 1210 draw @31,174,dram$
-1220 scroll cont "Informator Agrofilmowej Wiosny{29}80"
-1230 y=0:text@15,y,"Agrifilmowa Wiosna",2,1:text"{29}7gosci"
-1240 y=y+16:text@0,y,"w{29}14Ciechanowcu{29}14juz{29}14poraz{29}10 13{29}2.{29}17Pierwsza"
-1250 y=y+16:text@0,y,"impreza{29}9tego{29}9typu{29}9odbyla{29}10sie{29}10w{29}10roku 1974"
+1220 scroll cont "Informator Agrofilmowej Wiosny}80"
+1230 y=0:text@15,y,"Agrifilmowa Wiosna",2,1:text"}7gości"
+1240 y=y+16:text@0,y,"w}14Ciechanowcu}14już}14poraz}10 13}2.}17Pierwsza"
+1250 y=y+16:text@0,y,"impreza}9tego}9typu}9odbyła}10się}10w}10roku 1974"
+1260 y=y+16:text@0,y,"i}6od}5tego}5czasu}6nabrała}5rangi}5ogólnopolskiej}2."
+1270 y=y+16:text@0,y,"Podczas}14trzech}14dni}14trwania}14tej}13imprezy"
+1280 y=y+16:text@0,y,"będzie}20można}20obejrzeć}19szereg}20filmów"
+1290 y=y+16:text@0,y,"fabularnych}16i}16oświatowych}16poświęconych"
+1300 y=y+16:text@0,y,"tematyce rolniczej.":pause 16*60
+1310 y=y+18:text@16,y,"A}8oto}8organizotorzy}8i}8współorganizatorzy"
+1320 y=y+16:text@0,y,"tegorocznego wydarzenia}3:"
+1330 pause 6*60:scroll stop:cls
 19999 :
 20000 pause:nrm
 
